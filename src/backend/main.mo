@@ -8,7 +8,9 @@ import Iter "mo:core/Iter";
 import Set "mo:core/Set";
 import Time "mo:core/Time";
 import Map "mo:core/Map";
+import Migration "migration";
 
+(with migration = Migration.run)
 actor {
   type Weight = {
     value : Int; // In grams
@@ -64,6 +66,22 @@ actor {
     totalValue : Float;
   };
 
+  type Customer = {
+    id : Nat;
+    name : Text;
+    contactInfo : Text;
+    address : Text;
+    isActive : Bool;
+    createdAt : Int;
+    updatedAt : Int;
+  };
+
+  type CustomerInput = {
+    name : Text;
+    contactInfo : Text;
+    address : Text;
+  };
+
   type SessionId = Text;
 
   module SessionId {
@@ -74,10 +92,12 @@ actor {
 
   var nextIngredientId = 1;
   var nextRecipeId = 1;
+  var nextCustomerId = 1;
 
   let activeSessions = Set.empty<SessionId>();
   let ingredients = Map.empty<Nat, Ingredient>();
   let recipes = Map.empty<Nat, Recipe>();
+  let customers = Map.empty<Nat, Customer>();
 
   // Authentication & session management
   public shared ({ caller }) func createSession() : async SessionId {
@@ -212,5 +232,50 @@ actor {
       ingredients = ingredients.values().toArray();
       totalValue = calculateTotalInventoryValue();
     };
+  };
+
+  // Customer management
+  public shared ({ caller }) func addCustomer(sessionId : SessionId, customerData : CustomerInput) : async Nat {
+    let currentTime = Time.now();
+
+    let newCustomer : Customer = {
+      id = nextCustomerId;
+      name = customerData.name;
+      contactInfo = customerData.contactInfo;
+      address = customerData.address;
+      isActive = true;
+      createdAt = currentTime;
+      updatedAt = currentTime;
+    };
+
+    customers.add(newCustomer.id, newCustomer);
+    nextCustomerId += 1;
+    newCustomer.id;
+  };
+
+  public shared ({ caller }) func updateCustomer(sessionId : SessionId, customerId : Nat, updatedData : CustomerInput) : async () {
+    switch (customers.get(customerId)) {
+      case (null) {
+        Runtime.trap("Customer not found");
+      };
+      case (?existingCustomer) {
+        let updatedCustomer = {
+          existingCustomer with
+          name = updatedData.name;
+          contactInfo = updatedData.contactInfo;
+          address = updatedData.address;
+          updatedAt = Time.now();
+        };
+        customers.add(customerId, updatedCustomer);
+      };
+    };
+  };
+
+  public shared ({ caller }) func deleteCustomer(sessionId : SessionId, customerId : Nat) : async () {
+    customers.remove(customerId);
+  };
+
+  public query ({ caller }) func getCustomers() : async [Customer] {
+    customers.values().toArray();
   };
 };

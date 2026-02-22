@@ -105,6 +105,11 @@ export interface RecipeInput {
     bowlSize: BowlSize;
     ingredients: Array<RecipeIngredient>;
 }
+export interface CustomerInput {
+    contactInfo: string;
+    name: string;
+    address: string;
+}
 export interface Ingredient {
     id: bigint;
     lowStockThreshold: Weight;
@@ -124,6 +129,15 @@ export interface Recipe {
     bowlSize: BowlSize;
     ingredients: Array<RecipeIngredient>;
 }
+export interface Customer {
+    id: bigint;
+    contactInfo: string;
+    name: string;
+    createdAt: bigint;
+    isActive: boolean;
+    updatedAt: bigint;
+    address: string;
+}
 export interface RecipeIngredient {
     quantity: Weight;
     ingredientId: bigint;
@@ -138,23 +152,41 @@ export enum Variant_kilograms_grams {
     grams = "grams"
 }
 export interface backendInterface {
+    addCustomer(sessionId: SessionId, customerData: CustomerInput): Promise<bigint>;
     addIngredient(sessionId: SessionId, ingredient: IngredientInput): Promise<void>;
     addRecipe(sessionId: SessionId, recipe: RecipeInput): Promise<void>;
     createSession(): Promise<SessionId>;
+    deleteCustomer(sessionId: SessionId, customerId: bigint): Promise<void>;
     endSession(sessionId: SessionId): Promise<void>;
     getAllIngredients(): Promise<Array<Ingredient>>;
     getAllRecipes(): Promise<Array<Recipe>>;
+    getCustomers(): Promise<Array<Customer>>;
     getIngredient(ingredientId: bigint): Promise<Ingredient | null>;
     getInventoryState(): Promise<InventoryState>;
     getLowStockIngredients(): Promise<Array<Ingredient>>;
     getRecipe(recipeId: bigint): Promise<Recipe | null>;
     isSessionActive(sessionId: SessionId): Promise<boolean>;
+    updateCustomer(sessionId: SessionId, customerId: bigint, updatedData: CustomerInput): Promise<void>;
     updateIngredient(sessionId: SessionId, ingredientId: bigint, updatedIngredient: IngredientInput): Promise<void>;
     updateRecipe(sessionId: SessionId, recipeId: bigint, updatedRecipe: RecipeInput): Promise<void>;
 }
 import type { BowlSize as _BowlSize, Ingredient as _Ingredient, IngredientInput as _IngredientInput, InventoryState as _InventoryState, Recipe as _Recipe, RecipeIngredient as _RecipeIngredient, RecipeInput as _RecipeInput, Weight as _Weight } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
+    async addCustomer(arg0: SessionId, arg1: CustomerInput): Promise<bigint> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addCustomer(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addCustomer(arg0, arg1);
+            return result;
+        }
+    }
     async addIngredient(arg0: SessionId, arg1: IngredientInput): Promise<void> {
         if (this.processError) {
             try {
@@ -194,6 +226,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.createSession();
+            return result;
+        }
+    }
+    async deleteCustomer(arg0: SessionId, arg1: bigint): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.deleteCustomer(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.deleteCustomer(arg0, arg1);
             return result;
         }
     }
@@ -237,6 +283,20 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.getAllRecipes();
             return from_candid_vec_n19(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getCustomers(): Promise<Array<Customer>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getCustomers();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getCustomers();
+            return result;
         }
     }
     async getIngredient(arg0: bigint): Promise<Ingredient | null> {
@@ -306,6 +366,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.isSessionActive(arg0);
+            return result;
+        }
+    }
+    async updateCustomer(arg0: SessionId, arg1: bigint, arg2: CustomerInput): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updateCustomer(arg0, arg1, arg2);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updateCustomer(arg0, arg1, arg2);
             return result;
         }
     }

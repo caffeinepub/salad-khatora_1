@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
 import { useAuth } from '../contexts/AuthContext';
-import type { Ingredient, Recipe, IngredientInput, RecipeInput } from '../backend';
+import type { Ingredient, Recipe, Customer, IngredientInput, RecipeInput, CustomerInput } from '../backend';
 
 export function useIngredients() {
   const { actor, isFetching } = useActor();
@@ -118,6 +118,51 @@ export function useUpdateRecipe() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['recipes'] });
+    },
+  });
+}
+
+export function useCustomers() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<Customer[]>({
+    queryKey: ['customers'],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getCustomers();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useAddCustomer() {
+  const { actor } = useActor();
+  const { sessionId } = useAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (customerData: CustomerInput) => {
+      if (!actor || !sessionId) throw new Error('Not authenticated');
+      return actor.addCustomer(sessionId, customerData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['customers'] });
+    },
+  });
+}
+
+export function useUpdateCustomer() {
+  const { actor } = useActor();
+  const { sessionId } = useAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, customerData }: { id: bigint; customerData: CustomerInput }) => {
+      if (!actor || !sessionId) throw new Error('Not authenticated');
+      return actor.updateCustomer(sessionId, id, customerData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['customers'] });
     },
   });
 }

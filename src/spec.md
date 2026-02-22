@@ -1,18 +1,16 @@
 # Specification
 
 ## Summary
-**Goal:** Build a comprehensive business management system for Salad Khatora with Internet Identity authentication, inventory management, billing, subscriptions, in-app notifications, and analytics dashboard.
+**Goal:** Implement a functional customer management page with the ability to add and edit customer details.
 
 **Planned changes:**
-- Implement Internet Identity authentication for secure admin login
-- Create inventory management system with ingredients, quantities, cost tracking, and low-stock thresholds
-- Build menu management for salad bowls (250gm, 350gm, 500gm sizes) with recipe-to-ingredient mapping
-- Implement billing system with automatic inventory deduction based on recipes
-- Create subscription management for weekly (6 days) and monthly (24 days) plans
-- Build dashboard with sales analytics (daily/weekly/monthly), profit calculations, and top-selling bowls
-- Add in-app notification system with bell icon for low inventory alerts and subscription expiry warnings (2 days before end date)
-- Create customer database with contact details and preferences
-- Implement CSV export for sales and inventory reports
-- Design mobile-friendly UI with white and green color scheme
+- Replace the placeholder CustomersPage with a functional customer list display showing existing customers in a grid layout
+- Add an "Add Customer" button that opens a form dialog for creating new customers
+- Create a CustomerForm component with fields for name, mobile number, email, reference source, preferences, and address
+- Implement form validation for mobile number and email formats using react-hook-form
+- Add backend CRUD operations (addCustomer, updateCustomer, getCustomers) in the main actor with session protection
+- Create a CustomerList component that displays customer cards with name, mobile, email, and edit buttons
+- Add React Query hooks (useCustomers, useAddCustomer, useUpdateCustomer) for data fetching and mutations
+- Enable editing of existing customers by opening the CustomerForm dialog with pre-filled data
 
-**User-visible outcome:** Admin can log in with Internet Identity, manage ingredients and salad bowl recipes, process sales with automatic inventory updates, handle customer subscriptions, receive in-app alerts for low stock and expiring subscriptions, view comprehensive sales/profit analytics, and export reports to CSV. The system is optimized for mobile use with an intuitive green and white interface.
+**User-visible outcome:** Users can view all customers in a grid layout, add new customers using a form dialog with validated fields (name, mobile, email, reference source, preferences, address), and edit existing customer information. The page follows the same design pattern as the Inventory and Menu pages.

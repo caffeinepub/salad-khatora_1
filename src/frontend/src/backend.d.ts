@@ -23,6 +23,11 @@ export interface RecipeInput {
     bowlSize: BowlSize;
     ingredients: Array<RecipeIngredient>;
 }
+export interface CustomerInput {
+    contactInfo: string;
+    name: string;
+    address: string;
+}
 export interface Ingredient {
     id: bigint;
     lowStockThreshold: Weight;
@@ -42,6 +47,15 @@ export interface Recipe {
     bowlSize: BowlSize;
     ingredients: Array<RecipeIngredient>;
 }
+export interface Customer {
+    id: bigint;
+    contactInfo: string;
+    name: string;
+    createdAt: bigint;
+    isActive: boolean;
+    updatedAt: bigint;
+    address: string;
+}
 export interface RecipeIngredient {
     quantity: Weight;
     ingredientId: bigint;
@@ -56,17 +70,21 @@ export enum Variant_kilograms_grams {
     grams = "grams"
 }
 export interface backendInterface {
+    addCustomer(sessionId: SessionId, customerData: CustomerInput): Promise<bigint>;
     addIngredient(sessionId: SessionId, ingredient: IngredientInput): Promise<void>;
     addRecipe(sessionId: SessionId, recipe: RecipeInput): Promise<void>;
     createSession(): Promise<SessionId>;
+    deleteCustomer(sessionId: SessionId, customerId: bigint): Promise<void>;
     endSession(sessionId: SessionId): Promise<void>;
     getAllIngredients(): Promise<Array<Ingredient>>;
     getAllRecipes(): Promise<Array<Recipe>>;
+    getCustomers(): Promise<Array<Customer>>;
     getIngredient(ingredientId: bigint): Promise<Ingredient | null>;
     getInventoryState(): Promise<InventoryState>;
     getLowStockIngredients(): Promise<Array<Ingredient>>;
     getRecipe(recipeId: bigint): Promise<Recipe | null>;
     isSessionActive(sessionId: SessionId): Promise<boolean>;
+    updateCustomer(sessionId: SessionId, customerId: bigint, updatedData: CustomerInput): Promise<void>;
     updateIngredient(sessionId: SessionId, ingredientId: bigint, updatedIngredient: IngredientInput): Promise<void>;
     updateRecipe(sessionId: SessionId, recipeId: bigint, updatedRecipe: RecipeInput): Promise<void>;
 }

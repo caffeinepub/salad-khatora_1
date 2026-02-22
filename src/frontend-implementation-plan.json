@@ -1,389 +1,72 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Salad Khatora Business Management System - Frontend Implementation",
+  "title": "Implement functional customer management page with add/edit form",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Implement Internet Identity authentication with secure session management",
+      "id": "REQ-14",
+      "summary": "Replace the placeholder CustomersPage with a functional customer management interface that displays a list of existing customers and provides an 'Add Customer' button to open a form dialog",
       "acceptanceCriteria": [
-        "Admin can log in using Internet Identity (passkeys, Google, Microsoft, Apple)",
-        "Session persists across page refreshes",
-        "Login state is displayed in the UI",
-        "Logout functionality works correctly"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useAuth.ts",
-          "operation": "create",
-          "description": "Create authentication hook managing Internet Identity login, logout, session creation via backend, and session persistence using localStorage. Store sessionId returned from backend.createSession() after successful II authentication."
-        },
-        {
-          "path": "frontend/src/contexts/AuthContext.tsx",
-          "operation": "create",
-          "description": "Create AuthContext providing authentication state (isAuthenticated, principal, sessionId, isLoading) and actions (login, logout) throughout the app. Wrap the app with this provider."
-        },
-        {
-          "path": "frontend/src/components/LoginPage.tsx",
-          "operation": "create",
-          "description": "Create login page component with Internet Identity button. On successful login, call backend.createSession() to get sessionId and store it. Redirect authenticated users to dashboard."
-        },
-        {
-          "path": "frontend/src/components/Header.tsx",
-          "operation": "modify",
-          "description": "Add authentication status display showing logged-in principal or login button. Include logout button when authenticated that calls backend.endSession() before clearing local state."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Wrap app with AuthContext.Provider. Add route protection redirecting unauthenticated users to login page for all admin routes."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Create inventory management UI for ingredients with full CRUD operations",
-      "acceptanceCriteria": [
-        "Admin can add new ingredients with all required fields",
-        "Admin can view list of all ingredients",
-        "Admin can edit existing ingredient details",
-        "Admin can delete ingredients",
-        "Ingredient quantities support decimal values for precision"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/InventoryPage.tsx",
-          "operation": "create",
-          "description": "Create inventory management page displaying ingredients list with add/edit/delete actions. Use backend.getAllIngredients() to fetch data. Support both grams and kilograms unit selection with decimal input fields."
-        },
-        {
-          "path": "frontend/src/components/IngredientForm.tsx",
-          "operation": "create",
-          "description": "Create form component for adding/editing ingredients with fields: name, quantity (decimal), unit (grams/kg dropdown), costPricePerUnit, supplierName, lowStockThreshold. Call backend.addIngredient() or backend.updateIngredient() with sessionId."
-        },
-        {
-          "path": "frontend/src/components/IngredientList.tsx",
-          "operation": "create",
-          "description": "Create ingredient list component displaying all ingredients in a table/card layout. Include edit and delete buttons for each ingredient. Show quantity with unit, cost price, supplier, and low-stock threshold."
-        },
-        {
-          "path": "frontend/src/hooks/useIngredients.ts",
-          "operation": "create",
-          "description": "Create React Query hook for ingredient operations: fetching all ingredients, adding, updating. Use backend.getAllIngredients(), backend.addIngredient(), backend.updateIngredient() with proper cache invalidation."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "Display automatic calculation of total inventory value on inventory page and dashboard",
-      "acceptanceCriteria": [
-        "Total inventory value is calculated as sum of (quantity × cost price) for all ingredients",
-        "Value updates automatically when ingredients are added, edited, or deleted",
-        "Value is displayed on inventory page and dashboard"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/InventoryPage.tsx",
-          "operation": "modify",
-          "description": "Add inventory value display card at top of page fetching totalValue from backend.getInventoryState(). Format as currency with proper decimal places."
-        },
-        {
-          "path": "frontend/src/pages/DashboardPage.tsx",
-          "operation": "modify",
-          "description": "Add inventory value widget to dashboard displaying totalValue from backend.getInventoryState(). Include auto-refresh when navigating back to dashboard."
-        }
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "summary": "Create menu management UI for salad bowl recipes with three size options",
-      "acceptanceCriteria": [
-        "Admin can create salad bowl recipes with name, size (250gm/350gm/500gm), selling price, and ingredient list",
-        "Each ingredient in a recipe has a specified quantity (in grams)",
-        "Admin can view all bowl recipes",
-        "Admin can edit and delete bowl recipes"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/MenuPage.tsx",
-          "operation": "create",
-          "description": "Create menu management page displaying all recipes with add/edit/delete actions. Use backend.getAllRecipes() to fetch data. Show bowl size (small=250gm, medium=350gm, large=500gm) and ingredient breakdown. Wire the generated salad bowl icon (frontend/public/assets/generated/salad-bowl-icon.dim_256x256.png) into recipe cards as visual element."
-        },
-        {
-          "path": "frontend/src/components/RecipeForm.tsx",
-          "operation": "create",
-          "description": "Create form for adding/editing recipes with name, bowlSize dropdown (small/medium/large), selling price, and ingredient selector. Allow selecting multiple ingredients from inventory with quantity input for each. Map UI sizes to backend BowlSize enum values. Call backend.addRecipe() or backend.updateRecipe() with sessionId."
-        },
-        {
-          "path": "frontend/src/components/RecipeList.tsx",
-          "operation": "create",
-          "description": "Create recipe list component showing all bowls with size labels, ingredient lists with quantities, and action buttons. Display selling price and calculated ingredient cost."
-        },
-        {
-          "path": "frontend/src/hooks/useRecipes.ts",
-          "operation": "create",
-          "description": "Create React Query hook for recipe operations: fetching all recipes, adding, updating. Use backend.getAllRecipes(), backend.addRecipe(), backend.updateRecipe() with proper cache invalidation."
-        }
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "summary": "Implement billing and sales UI with automatic inventory deduction",
-      "acceptanceCriteria": [
-        "Admin can create a new sale/invoice with customer details, items, quantity, discount, payment mode",
-        "System automatically calculates total price with discount applied",
-        "When sale is recorded, ingredient quantities are deducted based on recipe mappings",
-        "Invoice includes all required fields: customer name, phone, items, quantity, price, discount, payment mode, date",
-        "Admin can view list of all sales/invoices"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/SalesPage.tsx",
-          "operation": "create",
-          "description": "Create sales/billing page with invoice creation form and sales history list. Display all invoices with filters. Support creating new sales that trigger backend inventory deduction."
-        },
-        {
-          "path": "frontend/src/components/InvoiceForm.tsx",
-          "operation": "create",
-          "description": "Create invoice form with customer name, phone, item selector (from recipes), quantity input, discount field, payment mode dropdown (cash/card/UPI), and date picker. Calculate total with discount applied. Submit to backend which handles inventory deduction."
-        },
-        {
-          "path": "frontend/src/components/SalesList.tsx",
-          "operation": "create",
-          "description": "Create sales list component displaying all invoices in table/card format with customer details, items, total, payment mode, and date. Include search and filter options."
-        },
-        {
-          "path": "frontend/src/hooks/useSales.ts",
-          "operation": "create",
-          "description": "Create React Query hook for sales operations: fetching all sales, creating new sale. Ensure proper cache invalidation to refresh inventory after sale creation."
-        }
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "summary": "Create dashboard showing daily, weekly, and monthly sales with filtering",
-      "acceptanceCriteria": [
-        "Dashboard displays total sales for current day, week, and month",
-        "Admin can filter sales by date range",
-        "Sales data updates when new invoices are created"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/DashboardPage.tsx",
-          "operation": "create",
-          "description": "Create main dashboard page with sales summary cards for daily, weekly, and monthly totals. Include date range filter controls. Display key metrics in card widgets with green accent colors."
-        },
-        {
-          "path": "frontend/src/components/SalesSummary.tsx",
-          "operation": "create",
-          "description": "Create sales summary component showing total sales for selected time periods (day/week/month). Support date range filtering and auto-refresh when new sales are created."
-        },
-        {
-          "path": "frontend/src/hooks/useDashboard.ts",
-          "operation": "create",
-          "description": "Create React Query hook for dashboard data: sales summaries, profit calculations, top-selling items. Aggregate frontend calculations from sales data fetched from backend."
-        }
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "summary": "Display profit calculation on dashboard based on cost vs selling price",
-      "acceptanceCriteria": [
-        "Profit is calculated as (selling price - total ingredient cost) for each sale",
-        "Dashboard shows daily, weekly, and monthly profit totals",
-        "Profit margins are displayed as percentage where applicable"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/DashboardPage.tsx",
-          "operation": "modify",
-          "description": "Add profit summary cards alongside sales cards showing daily, weekly, and monthly profit. Calculate profit from sales data by subtracting ingredient costs from selling prices. Display profit margin percentages."
-        },
-        {
-          "path": "frontend/src/components/ProfitSummary.tsx",
-          "operation": "create",
-          "description": "Create profit summary component calculating and displaying profit metrics for selected time periods. Show total profit, profit margin percentage, and comparison with previous periods."
-        }
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "summary": "Display top-selling salad bowls on dashboard with sales count and revenue",
-      "acceptanceCriteria": [
-        "Dashboard shows top 5 or top 10 best-selling bowls",
-        "Each entry shows bowl name, total quantity sold, and total revenue",
-        "Data is sortable by quantity or revenue"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/DashboardPage.tsx",
-          "operation": "modify",
-          "description": "Add top-selling items widget to dashboard. Calculate from sales data showing bowl names, quantities sold, and revenue. Support sorting by quantity or revenue."
-        },
-        {
-          "path": "frontend/src/components/TopSellingItems.tsx",
-          "operation": "create",
-          "description": "Create top-selling items component displaying ranked list of best-selling bowls. Show bowl name, image (using generated salad-bowl-icon.dim_256x256.png), quantity sold, and total revenue with sort controls."
-        }
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "summary": "Implement subscription management UI for weekly and monthly plans",
-      "acceptanceCriteria": [
-        "Admin can create subscription with customer name, plan type (weekly/monthly), start date, bowl size (250gm/350gm/500gm), price, payment status",
-        "End date is automatically calculated: weekly = 6 days from start, monthly = 24 days from start",
-        "Admin can view all active and expired subscriptions",
-        "Admin can edit subscription details and payment status",
-        "Subscriptions are automatically marked as expired when end date is reached"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/SubscriptionsPage.tsx",
-          "operation": "create",
-          "description": "Create subscription management page with add/edit subscription form and list of subscriptions. Show active and expired subscriptions separately. Calculate end date automatically based on plan type (weekly=6 days, monthly=24 days)."
-        },
-        {
-          "path": "frontend/src/components/SubscriptionForm.tsx",
-          "operation": "create",
-          "description": "Create subscription form with customer name, plan type dropdown (weekly/monthly), start date picker, bowl size selector (small/medium/large mapped to 250gm/350gm/500gm), price input, and payment status toggle. Auto-calculate and display end date based on plan type."
-        },
-        {
-          "path": "frontend/src/components/SubscriptionList.tsx",
-          "operation": "create",
-          "description": "Create subscription list component showing all subscriptions with customer details, plan type, dates, bowl size, price, and payment status. Support filtering by active/expired status and editing subscriptions."
-        },
-        {
-          "path": "frontend/src/hooks/useSubscriptions.ts",
-          "operation": "create",
-          "description": "Create React Query hook for subscription operations: fetching subscriptions, creating, updating. Handle automatic expiry detection based on end date comparison with current date."
-        }
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "summary": "Create in-app notification system with bell icon for low inventory and subscription expiry alerts",
-      "acceptanceCriteria": [
-        "Bell icon is displayed in the app header showing notification count",
-        "Clicking bell icon opens notification panel",
-        "Low-stock alert is generated when ingredient quantity falls below its low-stock threshold",
-        "Subscription expiry alert is generated 2 days before end date",
-        "Notifications can be marked as read or dismissed",
-        "Unread notification count is displayed on bell icon badge"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/Header.tsx",
-          "operation": "modify",
-          "description": "Add bell icon with notification badge showing unread count in header. Use backend.getLowStockIngredients() to check for low-stock alerts. Calculate subscription expiry alerts from subscription data (2 days before end date)."
-        },
-        {
-          "path": "frontend/src/components/NotificationPanel.tsx",
-          "operation": "create",
-          "description": "Create notification panel component displaying list of alerts. Show low-stock alerts (ingredient name, current quantity, threshold) and subscription expiry alerts (customer name, end date). Support mark as read and dismiss actions. Store notification state in localStorage."
-        },
-        {
-          "path": "frontend/src/hooks/useNotifications.ts",
-          "operation": "create",
-          "description": "Create hook managing notification state: fetching low-stock ingredients from backend, calculating subscription expiry alerts, tracking read/unread status, and providing notification count. Poll backend.getLowStockIngredients() periodically."
-        },
-        {
-          "path": "frontend/src/types/notifications.ts",
-          "operation": "create",
-          "description": "Define notification types and interfaces for low-stock and subscription expiry alerts. Include fields for notification ID, type, message, timestamp, read status, and related data."
-        }
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "summary": "Create customer database UI with full contact and preference management",
-      "acceptanceCriteria": [
-        "Admin can add new customers with all fields: name, mobile, email, reference, preferences, address",
-        "Admin can view list of all customers",
-        "Admin can edit customer details",
-        "Admin can delete customers",
-        "Customer data can be linked to sales and subscriptions"
+        "CustomersPage displays a grid or table of existing customers",
+        "An 'Add Customer' button is visible and opens a form dialog",
+        "The page follows the same layout pattern as InventoryPage and MenuPage"
       ],
       "file_operations": [
         {
           "path": "frontend/src/pages/CustomersPage.tsx",
-          "operation": "create",
-          "description": "Create customer management page with add/edit/delete functionality. Display customer list with all details. Support searching and filtering customers."
-        },
+          "operation": "modify",
+          "description": "Replace placeholder content with a functional customer management page structure. Add page header with 'Customer Management' title and 'Add Customer' button. Include CustomerList component to display existing customers. Add Dialog component to show CustomerForm when adding or editing customers. Follow the same layout pattern as InventoryPage with stat cards showing total customers and active customers count. Use the same green color scheme and styling conventions."
+        }
+      ]
+    },
+    {
+      "id": "REQ-15",
+      "summary": "Create a CustomerForm component with fields for name, mobile number, email, reference source, preferences, and address, using react-hook-form for validation and state management",
+      "acceptanceCriteria": [
+        "Form includes all required fields: name, mobile number, email, reference source, preferences, address",
+        "Form validates mobile number format and email format",
+        "Form uses the same styling and component patterns as IngredientForm and RecipeForm",
+        "Form submits customer data to backend via mutation"
+      ],
+      "file_operations": [
         {
           "path": "frontend/src/components/CustomerForm.tsx",
           "operation": "create",
-          "description": "Create customer form with fields: name, mobile number, email, reference source, preferences (text area), and address (multi-line). Validate mobile and email formats."
-        },
+          "description": "Create a form component for adding and editing customers using react-hook-form. Include form fields for name (Input), mobile number (Input with phone validation pattern), email (Input with email type), reference source (Select or Input), preferences (Textarea), and address (Textarea). Map form data to CustomerInput type where contactInfo contains mobile and email, and preferences are included in the address or contactInfo field as per backend interface. Use useAddCustomer and useUpdateCustomer mutations from useQueries. Include form validation for required fields, mobile number format (10 digits), and email format. Add submit and cancel buttons. Follow the same styling and structure as IngredientForm and RecipeForm with Card, CardHeader, CardTitle, CardContent components."
+        }
+      ]
+    },
+    {
+      "id": "REQ-17",
+      "summary": "Create a CustomerList component that displays customer cards in a grid layout showing name, mobile, email, and action buttons for editing",
+      "acceptanceCriteria": [
+        "CustomerList fetches and displays all customers using React Query",
+        "Each customer card shows name, mobile, email prominently",
+        "Edit button opens the CustomerForm dialog with pre-filled data",
+        "Component follows the same pattern as IngredientList and RecipeList"
+      ],
+      "file_operations": [
         {
           "path": "frontend/src/components/CustomerList.tsx",
           "operation": "create",
-          "description": "Create customer list component displaying customers in table/card format with name, mobile, email, and reference. Include edit and delete actions. Support search by name or mobile."
-        },
-        {
-          "path": "frontend/src/hooks/useCustomers.ts",
-          "operation": "create",
-          "description": "Create React Query hook for customer operations: fetching all customers, adding, updating, deleting. Ensure customer data is available for linking in sales and subscription forms."
+          "description": "Create a component that fetches customers using useCustomers hook and displays them in a grid layout with responsive columns. Render each customer as a Card showing name as title, contactInfo (mobile and email) in the content area, and an Edit button. Extract mobile and email from contactInfo field for display. Add Badge to show active status. Include edit handler that opens CustomerForm dialog with selected customer data pre-filled. Follow the same grid layout pattern as IngredientList and RecipeList using CSS Grid with gap-4 and responsive column counts."
         }
       ]
     },
     {
-      "id": "REQ-12",
-      "summary": "Implement CSV export functionality for sales and inventory reports",
+      "id": "REQ-18",
+      "summary": "Add React Query hooks for customer data fetching and mutations (useCustomers, useAddCustomer, useUpdateCustomer) in useQueries.ts",
       "acceptanceCriteria": [
-        "Admin can export sales data to CSV with all invoice details",
-        "Admin can export inventory data to CSV with all ingredient details",
-        "CSV files include proper headers and formatting",
-        "Export includes date range filters where applicable"
+        "useCustomers hook fetches customer list from backend",
+        "useAddCustomer mutation creates a new customer and invalidates customer queries",
+        "useUpdateCustomer mutation updates existing customer and invalidates queries",
+        "Hooks follow the same pattern as existing ingredient and recipe hooks"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/utils/csvExport.ts",
-          "operation": "create",
-          "description": "Create CSV export utility functions to convert sales and inventory data to CSV format. Include proper headers, escape special characters, and handle decimal formatting."
-        },
-        {
-          "path": "frontend/src/pages/SalesPage.tsx",
+          "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Add CSV export button to sales page. Export all sales data or filtered data based on date range selection. Include all invoice fields in export."
-        },
-        {
-          "path": "frontend/src/pages/InventoryPage.tsx",
-          "operation": "modify",
-          "description": "Add CSV export button to inventory page. Export all ingredient data including name, quantity, unit, cost price, supplier, and low-stock threshold."
-        }
-      ]
-    },
-    {
-      "id": "REQ-13",
-      "summary": "Design mobile-friendly UI with white and green color scheme for food business",
-      "acceptanceCriteria": [
-        "UI is fully responsive and works on mobile, tablet, and desktop",
-        "Primary colors are white and green (#22C55E or similar green shade)",
-        "Navigation is intuitive with clear menu structure",
-        "Forms are easy to use on mobile devices",
-        "Dashboard widgets are optimized for mobile viewing"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/index.css",
-          "operation": "modify",
-          "description": "Configure global theme with white background and green (#22C55E) as primary accent color. Set up responsive typography and spacing. Ensure mobile-first design approach."
-        },
-        {
-          "path": "frontend/tailwind.config.js",
-          "operation": "modify",
-          "description": "Customize Tailwind theme with green primary color (#22C55E), configure responsive breakpoints for mobile/tablet/desktop, and set up color palette for food business aesthetic."
-        },
-        {
-          "path": "frontend/src/components/Layout.tsx",
-          "operation": "create",
-          "description": "Create responsive layout component with mobile-friendly navigation (hamburger menu on mobile, sidebar on desktop). Include Header with logo (using generated frontend/public/assets/generated/logo-leaf.dim_128x128.png), navigation, and notification bell. Use green accent colors for branding."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Wrap all routes with Layout component to provide consistent navigation structure. Set up routing for Dashboard, Inventory, Menu, Sales, Subscriptions, Customers pages. Ensure login page is accessible without layout wrapper."
+          "description": "Add three React Query hooks for customer management. Create useCustomers hook using useQuery that calls actor.getCustomers() with queryKey ['customers']. Create useAddCustomer mutation hook using useMutation that calls actor.addCustomer(sessionId, customerData) and invalidates ['customers'] query on success. Create useUpdateCustomer mutation hook using useMutation that calls actor.updateCustomer(sessionId, customerId, updatedData) and invalidates ['customers'] query on success. Ensure all mutations require sessionId from AuthContext. Follow the same pattern as useIngredients, useAddIngredient, and useUpdateIngredient hooks with proper error handling and type safety using Customer and CustomerInput types from backend.d.ts."
         }
       ]
     }

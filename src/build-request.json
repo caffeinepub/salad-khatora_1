@@ -1,248 +1,107 @@
 {
   "kind": "build_request",
-  "title": "Build Salad Khatora business management system with in-app notifications and Internet Identity authentication",
+  "title": "Implement functional customer management page with add/edit form",
   "projectName": "Salad Khatora",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "Implement Internet Identity authentication for admin login with secure session management",
-      "target": "both",
+      "id": "REQ-14",
+      "text": "Replace the placeholder CustomersPage with a functional customer management interface that displays a list of existing customers and provides an 'Add Customer' button to open a form dialog",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-5"
+          "msg-latest"
         ],
         "quotes": [
-          "use internet identity for login"
+          "customer management coming like this not able to add customer details"
         ]
       },
       "acceptanceCriteria": [
-        "Admin can log in using Internet Identity (passkeys, Google, Microsoft, Apple)",
-        "Session persists across page refreshes",
-        "Login state is displayed in the UI",
-        "Logout functionality works correctly"
+        "CustomersPage displays a grid or table of existing customers",
+        "An 'Add Customer' button is visible and opens a form dialog",
+        "The page follows the same layout pattern as InventoryPage and MenuPage"
       ]
     },
     {
-      "id": "REQ-2",
-      "text": "Create inventory management system with fields for ingredient name, current quantity (in grams or kg), unit type (grams/kg), cost price per unit, supplier name, and low-stock threshold",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-3"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admin can add new ingredients with all required fields",
-        "Admin can view list of all ingredients",
-        "Admin can edit existing ingredient details",
-        "Admin can delete ingredients",
-        "Ingredient quantities support decimal values for precision"
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "text": "Implement automatic calculation of total inventory value based on ingredient quantities and cost prices",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-3"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Total inventory value is calculated as sum of (quantity × cost price) for all ingredients",
-        "Value updates automatically when ingredients are added, edited, or deleted",
-        "Value is displayed on inventory page and dashboard"
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Create menu management for salad bowls with three sizes: 250gm, 350gm, and 500gm, where each bowl recipe is linked to specific ingredient quantities",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-3"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admin can create salad bowl recipes with name, size (250gm/350gm/500gm), selling price, and ingredient list",
-        "Each ingredient in a recipe has a specified quantity (in grams)",
-        "Admin can view all bowl recipes",
-        "Admin can edit and delete bowl recipes"
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Implement billing and sales system to generate invoices with customer name, phone number, items ordered, quantity, price, discount, payment mode, and date, with automatic inventory deduction based on recipe mapping",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-3"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admin can create a new sale/invoice with customer details, items, quantity, discount, payment mode",
-        "System automatically calculates total price with discount applied",
-        "When sale is recorded, ingredient quantities are deducted based on recipe mappings",
-        "Invoice includes all required fields: customer name, phone, items, quantity, price, discount, payment mode, date",
-        "Admin can view list of all sales/invoices"
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Create dashboard showing daily, weekly, and monthly sales with filtering options",
+      "id": "REQ-15",
+      "text": "Create a CustomerForm component with fields for name, mobile number, email, reference source, preferences, and address, using react-hook-form for validation and state management",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-3"
+          "msg-latest"
         ]
       },
       "acceptanceCriteria": [
-        "Dashboard displays total sales for current day, week, and month",
-        "Admin can filter sales by date range",
-        "Sales data updates when new invoices are created"
+        "Form includes all required fields: name, mobile number, email, reference source, preferences, address",
+        "Form validates mobile number format and email format",
+        "Form uses the same styling and component patterns as IngredientForm and RecipeForm",
+        "Form submits customer data to backend via mutation"
       ]
     },
     {
-      "id": "REQ-7",
-      "text": "Implement profit calculation on dashboard based on cost price (from ingredients) versus selling price (from invoices)",
-      "target": "both",
+      "id": "REQ-16",
+      "text": "Add backend CRUD operations for customer management including addCustomer, updateCustomer, deleteCustomer, and getCustomers functions in the main actor",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-3"
+          "msg-latest"
         ]
       },
       "acceptanceCriteria": [
-        "Profit is calculated as (selling price - total ingredient cost) for each sale",
-        "Dashboard shows daily, weekly, and monthly profit totals",
-        "Profit margins are displayed as percentage where applicable"
+        "Customer type includes fields for id, name, mobile, email, referenceSource, preferences, address",
+        "addCustomer function creates a new customer and returns the customer with generated ID",
+        "updateCustomer function modifies an existing customer by ID",
+        "getCustomers function returns an array of all customers",
+        "All customer operations are session-protected like ingredient and recipe operations"
       ]
     },
     {
-      "id": "REQ-8",
-      "text": "Display top-selling salad bowls on dashboard with sales count and revenue",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-3"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Dashboard shows top 5 or top 10 best-selling bowls",
-        "Each entry shows bowl name, total quantity sold, and total revenue",
-        "Data is sortable by quantity or revenue"
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "text": "Implement subscription management module for weekly (6 days/week) and monthly (24 days/month) plans with customer details, plan type, start date, end date, bowl size, price, and payment status",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-3"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admin can create subscription with customer name, plan type (weekly/monthly), start date, bowl size (250gm/350gm/500gm), price, payment status",
-        "End date is automatically calculated: weekly = 6 days from start, monthly = 24 days from start",
-        "Admin can view all active and expired subscriptions",
-        "Admin can edit subscription details and payment status",
-        "Subscriptions are automatically marked as expired when end date is reached"
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "text": "Create in-app notification system with bell icon displaying alerts for low inventory (below threshold) and subscriptions ending within 2 days",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-3",
-          "msg-5"
-        ],
-        "quotes": [
-          "display messages in the app"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Bell icon is displayed in the app header showing notification count",
-        "Clicking bell icon opens notification panel",
-        "Low-stock alert is generated when ingredient quantity falls below its low-stock threshold",
-        "Subscription expiry alert is generated 2 days before end date",
-        "Notifications can be marked as read or dismissed",
-        "Unread notification count is displayed on bell icon badge"
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "text": "Create customer database with fields for name, mobile number, email, reference source, preferences, and address",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-3"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admin can add new customers with all fields: name, mobile, email, reference, preferences, address",
-        "Admin can view list of all customers",
-        "Admin can edit customer details",
-        "Admin can delete customers",
-        "Customer data can be linked to sales and subscriptions"
-      ]
-    },
-    {
-      "id": "REQ-12",
-      "text": "Implement CSV export functionality for sales reports and inventory reports",
+      "id": "REQ-17",
+      "text": "Create a CustomerList component that displays customer cards in a grid layout showing name, mobile, email, and action buttons for editing",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-3"
+          "msg-latest"
         ]
       },
       "acceptanceCriteria": [
-        "Admin can export sales data to CSV with all invoice details",
-        "Admin can export inventory data to CSV with all ingredient details",
-        "CSV files include proper headers and formatting",
-        "Export includes date range filters where applicable"
+        "CustomerList fetches and displays all customers using React Query",
+        "Each customer card shows name, mobile, email prominently",
+        "Edit button opens the CustomerForm dialog with pre-filled data",
+        "Component follows the same pattern as IngredientList and RecipeList"
       ]
     },
     {
-      "id": "REQ-13",
-      "text": "Design mobile-friendly UI with white and green color scheme suitable for a small food business owner",
+      "id": "REQ-18",
+      "text": "Add React Query hooks for customer data fetching and mutations (useCustomers, useAddCustomer, useUpdateCustomer) in useQueries.ts",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-3"
+          "msg-latest"
         ]
       },
       "acceptanceCriteria": [
-        "UI is fully responsive and works on mobile, tablet, and desktop",
-        "Primary colors are white and green (#22C55E or similar green shade)",
-        "Navigation is intuitive with clear menu structure",
-        "Forms are easy to use on mobile devices",
-        "Dashboard widgets are optimized for mobile viewing"
+        "useCustomers hook fetches customer list from backend",
+        "useAddCustomer mutation creates a new customer and invalidates customer queries",
+        "useUpdateCustomer mutation updates existing customer and invalidates queries",
+        "Hooks follow the same pattern as existing ingredient and recipe hooks"
       ]
     }
   ],
   "constraints": [
-    "Use Internet Identity for authentication (not email/password)",
-    "Display notifications in-app only (no email or push notifications)",
-    "Follow single-actor Motoko architecture for backend",
-    "Use React with TypeScript, Tailwind CSS, and React Query for frontend",
-    "All customer messaging features must be in-app only (no SMS, WhatsApp, or external push services)"
+    "Do not modify the backend session management or authentication logic",
+    "Follow the existing form component patterns from IngredientForm and RecipeForm",
+    "Use the same UI components and styling approach as other management pages",
+    "Maintain consistency with the white and green color scheme"
   ],
   "nonGoals": [
-    "Email notification system (feature not enabled)",
-    "SMS or WhatsApp messaging to customers",
-    "Push notifications to mobile devices",
-    "Email/password authentication",
-    "Multi-location or multi-store support",
-    "Online ordering system for customers"
+    "Customer search or filtering functionality",
+    "Customer deletion or archiving",
+    "Linking customers to sales or subscriptions",
+    "Customer analytics or reporting"
   ],
   "imageRequirements": {
-    "required": [
-      "Leaf logo icon in green for Salad Khatora brand (logo-leaf.dim_128x128.png)",
-      "Simple salad bowl illustration for menu cards (salad-bowl-icon.dim_256x256.png)"
-    ],
+    "required": [],
     "edits": []
   }
 }

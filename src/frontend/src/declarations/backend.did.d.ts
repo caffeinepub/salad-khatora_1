@@ -13,6 +13,20 @@ import type { Principal } from '@icp-sdk/core/principal';
 export type BowlSize = { 'large' : null } |
   { 'small' : null } |
   { 'medium' : null };
+export interface Customer {
+  'id' : bigint,
+  'contactInfo' : string,
+  'name' : string,
+  'createdAt' : bigint,
+  'isActive' : boolean,
+  'updatedAt' : bigint,
+  'address' : string,
+}
+export interface CustomerInput {
+  'contactInfo' : string,
+  'name' : string,
+  'address' : string,
+}
 export interface Ingredient {
   'id' : bigint,
   'lowStockThreshold' : Weight,
@@ -54,17 +68,21 @@ export interface Weight {
     { 'grams' : null },
 }
 export interface _SERVICE {
+  'addCustomer' : ActorMethod<[SessionId, CustomerInput], bigint>,
   'addIngredient' : ActorMethod<[SessionId, IngredientInput], undefined>,
   'addRecipe' : ActorMethod<[SessionId, RecipeInput], undefined>,
   'createSession' : ActorMethod<[], SessionId>,
+  'deleteCustomer' : ActorMethod<[SessionId, bigint], undefined>,
   'endSession' : ActorMethod<[SessionId], undefined>,
   'getAllIngredients' : ActorMethod<[], Array<Ingredient>>,
   'getAllRecipes' : ActorMethod<[], Array<Recipe>>,
+  'getCustomers' : ActorMethod<[], Array<Customer>>,
   'getIngredient' : ActorMethod<[bigint], [] | [Ingredient]>,
   'getInventoryState' : ActorMethod<[], InventoryState>,
   'getLowStockIngredients' : ActorMethod<[], Array<Ingredient>>,
   'getRecipe' : ActorMethod<[bigint], [] | [Recipe]>,
   'isSessionActive' : ActorMethod<[SessionId], boolean>,
+  'updateCustomer' : ActorMethod<[SessionId, bigint, CustomerInput], undefined>,
   'updateIngredient' : ActorMethod<
     [SessionId, bigint, IngredientInput],
     undefined

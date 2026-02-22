@@ -9,6 +9,11 @@
 import { IDL } from '@icp-sdk/core/candid';
 
 export const SessionId = IDL.Text;
+export const CustomerInput = IDL.Record({
+  'contactInfo' : IDL.Text,
+  'name' : IDL.Text,
+  'address' : IDL.Text,
+});
 export const Weight = IDL.Record({
   'value' : IDL.Int,
   'unit' : IDL.Variant({ 'kilograms' : IDL.Null, 'grams' : IDL.Null }),
@@ -48,23 +53,36 @@ export const Recipe = IDL.Record({
   'bowlSize' : BowlSize,
   'ingredients' : IDL.Vec(RecipeIngredient),
 });
+export const Customer = IDL.Record({
+  'id' : IDL.Nat,
+  'contactInfo' : IDL.Text,
+  'name' : IDL.Text,
+  'createdAt' : IDL.Int,
+  'isActive' : IDL.Bool,
+  'updatedAt' : IDL.Int,
+  'address' : IDL.Text,
+});
 export const InventoryState = IDL.Record({
   'totalValue' : IDL.Float64,
   'ingredients' : IDL.Vec(Ingredient),
 });
 
 export const idlService = IDL.Service({
+  'addCustomer' : IDL.Func([SessionId, CustomerInput], [IDL.Nat], []),
   'addIngredient' : IDL.Func([SessionId, IngredientInput], [], []),
   'addRecipe' : IDL.Func([SessionId, RecipeInput], [], []),
   'createSession' : IDL.Func([], [SessionId], []),
+  'deleteCustomer' : IDL.Func([SessionId, IDL.Nat], [], []),
   'endSession' : IDL.Func([SessionId], [], []),
   'getAllIngredients' : IDL.Func([], [IDL.Vec(Ingredient)], ['query']),
   'getAllRecipes' : IDL.Func([], [IDL.Vec(Recipe)], ['query']),
+  'getCustomers' : IDL.Func([], [IDL.Vec(Customer)], ['query']),
   'getIngredient' : IDL.Func([IDL.Nat], [IDL.Opt(Ingredient)], ['query']),
   'getInventoryState' : IDL.Func([], [InventoryState], ['query']),
   'getLowStockIngredients' : IDL.Func([], [IDL.Vec(Ingredient)], ['query']),
   'getRecipe' : IDL.Func([IDL.Nat], [IDL.Opt(Recipe)], ['query']),
   'isSessionActive' : IDL.Func([SessionId], [IDL.Bool], ['query']),
+  'updateCustomer' : IDL.Func([SessionId, IDL.Nat, CustomerInput], [], []),
   'updateIngredient' : IDL.Func([SessionId, IDL.Nat, IngredientInput], [], []),
   'updateRecipe' : IDL.Func([SessionId, IDL.Nat, RecipeInput], [], []),
 });
@@ -73,6 +91,11 @@ export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
   const SessionId = IDL.Text;
+  const CustomerInput = IDL.Record({
+    'contactInfo' : IDL.Text,
+    'name' : IDL.Text,
+    'address' : IDL.Text,
+  });
   const Weight = IDL.Record({
     'value' : IDL.Int,
     'unit' : IDL.Variant({ 'kilograms' : IDL.Null, 'grams' : IDL.Null }),
@@ -112,23 +135,36 @@ export const idlFactory = ({ IDL }) => {
     'bowlSize' : BowlSize,
     'ingredients' : IDL.Vec(RecipeIngredient),
   });
+  const Customer = IDL.Record({
+    'id' : IDL.Nat,
+    'contactInfo' : IDL.Text,
+    'name' : IDL.Text,
+    'createdAt' : IDL.Int,
+    'isActive' : IDL.Bool,
+    'updatedAt' : IDL.Int,
+    'address' : IDL.Text,
+  });
   const InventoryState = IDL.Record({
     'totalValue' : IDL.Float64,
     'ingredients' : IDL.Vec(Ingredient),
   });
   
   return IDL.Service({
+    'addCustomer' : IDL.Func([SessionId, CustomerInput], [IDL.Nat], []),
     'addIngredient' : IDL.Func([SessionId, IngredientInput], [], []),
     'addRecipe' : IDL.Func([SessionId, RecipeInput], [], []),
     'createSession' : IDL.Func([], [SessionId], []),
+    'deleteCustomer' : IDL.Func([SessionId, IDL.Nat], [], []),
     'endSession' : IDL.Func([SessionId], [], []),
     'getAllIngredients' : IDL.Func([], [IDL.Vec(Ingredient)], ['query']),
     'getAllRecipes' : IDL.Func([], [IDL.Vec(Recipe)], ['query']),
+    'getCustomers' : IDL.Func([], [IDL.Vec(Customer)], ['query']),
     'getIngredient' : IDL.Func([IDL.Nat], [IDL.Opt(Ingredient)], ['query']),
     'getInventoryState' : IDL.Func([], [InventoryState], ['query']),
     'getLowStockIngredients' : IDL.Func([], [IDL.Vec(Ingredient)], ['query']),
     'getRecipe' : IDL.Func([IDL.Nat], [IDL.Opt(Recipe)], ['query']),
     'isSessionActive' : IDL.Func([SessionId], [IDL.Bool], ['query']),
+    'updateCustomer' : IDL.Func([SessionId, IDL.Nat, CustomerInput], [], []),
     'updateIngredient' : IDL.Func(
         [SessionId, IDL.Nat, IngredientInput],
         [],

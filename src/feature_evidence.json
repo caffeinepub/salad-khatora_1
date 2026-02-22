@@ -2,195 +2,8 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-implement-internet-identity-authentication-for-admin-login-with-secure-session-management",
-      "featureTitle": "Implement Internet Identity authentication for admin login with secure session management",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/contexts/AuthContext.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-inventory-management-system-with-fields-for-ingredient-name-current-quantity-in-grams-or-kg-unit-type-grams-kg-cost-price-per-unit-supplier-name-and-low-stock-threshold",
-      "featureTitle": "Create inventory management system with fields for ingredient name, current quantity (in grams or kg), unit type (grams/kg), cost price per unit, supplier name, and low-stock threshold",
-      "files": [
-        "frontend/src/components/IngredientForm.tsx",
-        "frontend/src/components/IngredientList.tsx",
-        "frontend/src/pages/InventoryPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-2"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-automatic-calculation-of-total-inventory-value-based-on-ingredient-quantities-and-cost-prices",
-      "featureTitle": "Implement automatic calculation of total inventory value based on ingredient quantities and cost prices",
-      "files": [
-        "frontend/src/pages/DashboardPage.tsx",
-        "frontend/src/pages/InventoryPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-3"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-menu-management-for-salad-bowls-with-three-sizes-250gm-350gm-and-500gm-where-each-bowl-recipe-is-linked-to-specific-ingredient-quantities",
-      "featureTitle": "Create menu management for salad bowls with three sizes: 250gm, 350gm, and 500gm, where each bowl recipe is linked to specific ingredient quantities",
-      "files": [
-        "frontend/src/components/RecipeForm.tsx",
-        "frontend/src/components/RecipeList.tsx",
-        "frontend/src/pages/MenuPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-4"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-billing-and-sales-system-to-generate-invoices-with-customer-name-phone-number-items-ordered-quantity-price-discount-payment-mode-and-date-with-automatic-inventory-deduction-based-on-recipe-mapping",
-      "featureTitle": "Implement billing and sales system to generate invoices with customer name, phone number, items ordered, quantity, price, discount, payment mode, and date, with automatic inventory deduction based on recipe mapping",
-      "files": [
-        "frontend/src/pages/SalesPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-5"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-dashboard-showing-daily-weekly-and-monthly-sales-with-filtering-options",
-      "featureTitle": "Create dashboard showing daily, weekly, and monthly sales with filtering options",
-      "files": [
-        "frontend/src/pages/DashboardPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-6"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-profit-calculation-on-dashboard-based-on-cost-price-from-ingredients-versus-selling-price-from-invoices",
-      "featureTitle": "Implement profit calculation on dashboard based on cost price (from ingredients) versus selling price (from invoices)",
-      "files": [
-        "frontend/src/pages/DashboardPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-7"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-display-top-selling-salad-bowls-on-dashboard-with-sales-count-and-revenue",
-      "featureTitle": "Display top-selling salad bowls on dashboard with sales count and revenue",
-      "files": [
-        "frontend/src/pages/DashboardPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-8"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-subscription-management-module-for-weekly-6-days-week-and-monthly-24-days-month-plans-with-customer-details-plan-type-start-date-end-date-bowl-size-price-and-payment-status",
-      "featureTitle": "Implement subscription management module for weekly (6 days/week) and monthly (24 days/month) plans with customer details, plan type, start date, end date, bowl size, price, and payment status",
-      "files": [
-        "frontend/src/pages/SubscriptionsPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-9"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-in-app-notification-system-with-bell-icon-displaying-alerts-for-low-inventory-below-threshold-and-subscriptions-ending-within-2-days",
-      "featureTitle": "Create in-app notification system with bell icon displaying alerts for low inventory (below threshold) and subscriptions ending within 2 days",
-      "files": [
-        "frontend/src/components/NotificationPanel.tsx",
-        "frontend/src/hooks/useNotifications.ts"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-10"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-customer-database-with-fields-for-name-mobile-number-email-reference-source-preferences-and-address",
-      "featureTitle": "Create customer database with fields for name, mobile number, email, reference source, preferences, and address",
+      "featureId": "feature-replace-the-placeholder-customerspage-with-a-functional-customer-management-interface-that-displays-a-list-of-existing-customers-and-provides-an-add-customer-button-to-open-a-form-dialog",
+      "featureTitle": "Replace the placeholder CustomersPage with a functional customer management interface that displays a list of existing customers and provides an 'Add Customer' button to open a form dialog",
       "files": [
         "frontend/src/pages/CustomersPage.tsx"
       ],
@@ -202,17 +15,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-11"
+        "REQ-14"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-csv-export-functionality-for-sales-reports-and-inventory-reports",
-      "featureTitle": "Implement CSV export functionality for sales reports and inventory reports",
+      "featureId": "feature-create-a-customerform-component-with-fields-for-name-mobile-number-email-reference-source-preferences-and-address-using-react-hook-form-for-validation-and-state-management",
+      "featureTitle": "Create a CustomerForm component with fields for name, mobile number, email, reference source, preferences, and address, using react-hook-form for validation and state management",
       "files": [
-        "frontend/src/pages/InventoryPage.tsx",
-        "frontend/src/pages/SalesPage.tsx",
-        "frontend/src/utils/csvExport.ts"
+        "frontend/src/components/CustomerForm.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -222,18 +33,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-12"
+        "REQ-15"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-design-mobile-friendly-ui-with-white-and-green-color-scheme-suitable-for-a-small-food-business-owner",
-      "featureTitle": "Design mobile-friendly UI with white and green color scheme suitable for a small food business owner",
+      "featureId": "feature-create-a-customerlist-component-that-displays-customer-cards-in-a-grid-layout-showing-name-mobile-email-and-action-buttons-for-editing",
+      "featureTitle": "Create a CustomerList component that displays customer cards in a grid layout showing name, mobile, email, and action buttons for editing",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/Layout.tsx",
-        "frontend/src/index.css",
-        "frontend/tailwind.config.js"
+        "frontend/src/components/CustomerList.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -243,7 +51,25 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-13"
+        "REQ-17"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-react-query-hooks-for-customer-data-fetching-and-mutations-usecustomers-useaddcustomer-useupdatecustomer-in-usequeries-ts",
+      "featureTitle": "Add React Query hooks for customer data fetching and mutations (useCustomers, useAddCustomer, useUpdateCustomer) in useQueries.ts",
+      "files": [
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-18"
       ],
       "confidence": "high"
     }

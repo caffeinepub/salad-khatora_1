@@ -1,7 +1,7 @@
 {
   "frontend/src/App.tsx": "Main application component with TanStack Router setup, authentication provider, theme provider, and route definitions for all pages (login, dashboard, inventory, menu, sales, subscriptions, customers).",
   "frontend/src/contexts/AuthContext.tsx": "Authentication context provider managing Internet Identity login state, session creation/management, and providing authentication status throughout the app.",
-  "frontend/src/hooks/useQueries.ts": "React Query hooks for all backend operations including ingredients (CRUD), recipes (CRUD), inventory state, and low stock alerts with proper cache invalidation.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for all backend operations including ingredients, recipes, and customers (CRUD) with proper cache invalidation and session management.",
   "frontend/src/components/Layout.tsx": "Main layout component with responsive header, mobile navigation drawer, notification bell with badge, logout button, and footer with Caffeine attribution.",
   "frontend/src/pages/LoginPage.tsx": "Login page with Internet Identity authentication button, Salad Khatora branding, and automatic redirect to dashboard after successful login.",
   "frontend/src/pages/DashboardPage.tsx": "Dashboard displaying key metrics including total inventory value, ingredient count, low stock alerts, and welcome message with stats cards.",
@@ -13,10 +13,12 @@
   "frontend/src/components/RecipeList.tsx": "Grid display of recipe cards showing bowl size, ingredients with quantities, and salad bowl icon with edit functionality.",
   "frontend/src/pages/SalesPage.tsx": "Placeholder page for sales and billing functionality (coming soon).",
   "frontend/src/pages/SubscriptionsPage.tsx": "Placeholder page for subscription management functionality (coming soon).",
-  "frontend/src/pages/CustomersPage.tsx": "Placeholder page for customer management functionality (coming soon).",
+  "frontend/src/pages/CustomersPage.tsx": "Customer management page with stat cards showing total and active customers, add customer button, and customer list display with edit functionality using Dialog component.",
   "frontend/src/components/NotificationPanel.tsx": "Popover notification panel displaying low stock alerts and subscription expiry notifications with mark as read and dismiss actions.",
   "frontend/src/hooks/useNotifications.ts": "Hook managing in-app notifications for low stock alerts, storing notification state in localStorage, and providing unread count.",
   "frontend/src/utils/csvExport.ts": "Utility function for exporting data to CSV format with proper escaping and date-stamped filenames.",
   "frontend/src/index.css": "Global styles with OKLCH color system using green (#22C55E equivalent) as primary color for light and dark modes.",
-  "frontend/tailwind.config.js": "Tailwind configuration with green primary color, Inter font family, and custom design tokens for the Salad Khatora brand."
+  "frontend/tailwind.config.js": "Tailwind configuration with green primary color, Inter font family, and custom design tokens for the Salad Khatora brand.",
+  "frontend/src/components/CustomerForm.tsx": "Form component for adding and editing customers with fields for name, mobile (10-digit validation), email, reference source, preferences, and address using react-hook-form and JSON-encoded contactInfo storage.",
+  "frontend/src/components/CustomerList.tsx": "Grid display of customer cards showing name, mobile, email, address, reference source, and active status badge with edit functionality and icon-based layout."
 }
