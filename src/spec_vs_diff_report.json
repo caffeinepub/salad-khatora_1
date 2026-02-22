@@ -1,0 +1,101 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-22T00:25:14.374Z",
+  "summary": "The implementation covers authentication, inventory management, menu management, and in-app notifications. However, several key requirements are missing: billing/sales system (REQ-5), dashboard sales analytics (REQ-6, REQ-7, REQ-8), subscription management (REQ-9), customer database (REQ-11), and CSV export for sales (REQ-12). The UI follows the green and white color scheme (REQ-13), and Internet Identity authentication is implemented (REQ-1).",
+  "missing_requirements": [
+    {
+      "id": "REQ-5",
+      "requirement": "Implement billing and sales system to generate invoices with customer name, phone number, items ordered, quantity, price, discount, payment mode, and date, with automatic inventory deduction based on recipe mapping",
+      "reason": "No sales or invoice functionality is implemented in the backend or frontend. SalesPage.tsx is missing from the diff, and there are no backend methods for creating or managing sales/invoices.",
+      "evidence": [
+        "backend/main.mo",
+        "frontend/src/App.tsx"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "requirement": "Create dashboard showing daily, weekly, and monthly sales with filtering options",
+      "reason": "DashboardPage displays a placeholder '₹0.00' for 'Sales Today' with 'Coming soon' text. No date range filtering or sales data aggregation is present.",
+      "evidence": [
+        "frontend/src/pages/DashboardPage.tsx"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "requirement": "Implement profit calculation on dashboard based on cost price versus selling price",
+      "reason": "No profit calculation logic exists. The dashboard does not display profit totals or margins.",
+      "evidence": [
+        "frontend/src/pages/DashboardPage.tsx",
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "requirement": "Display top-selling salad bowls on dashboard with sales count and revenue",
+      "reason": "No top-selling bowls functionality is implemented. The dashboard shows only inventory metrics.",
+      "evidence": [
+        "frontend/src/pages/DashboardPage.tsx"
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "requirement": "Implement subscription management module for weekly and monthly plans with customer details, plan type, start date, end date, bowl size, price, and payment status",
+      "reason": "SubscriptionsPage.tsx is missing from the diff. No backend types or methods for subscriptions exist.",
+      "evidence": [
+        "backend/main.mo",
+        "frontend/src/App.tsx"
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "requirement": "Create customer database with fields for name, mobile number, email, reference source, preferences, and address",
+      "reason": "CustomersPage shows a placeholder 'coming soon' message. No customer types or backend methods are implemented.",
+      "evidence": [
+        "frontend/src/pages/CustomersPage.tsx",
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "requirement": "Implement CSV export functionality for sales reports and inventory reports",
+      "reason": "Only inventory CSV export is implemented. Sales CSV export is missing because sales functionality does not exist.",
+      "evidence": [
+        "frontend/src/pages/InventoryPage.tsx"
+      ]
+    }
+  ],
+  "hallucinated_features": [],
+  "confidence": 0.95,
+  "changed_files": [
+    "all_files_summary.json",
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/index.css",
+    "frontend/index.html",
+    "frontend/src/App.tsx",
+    "frontend/src/components/IngredientForm.tsx",
+    "frontend/src/components/IngredientList.tsx",
+    "frontend/src/components/Layout.tsx",
+    "frontend/src/components/NotificationPanel.tsx",
+    "frontend/src/components/RecipeForm.tsx",
+    "frontend/src/components/RecipeList.tsx",
+    "frontend/src/contexts/AuthContext.tsx",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/hooks/useNotifications.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/index.css",
+    "frontend/src/main.tsx",
+    "frontend/src/pages/CustomersPage.tsx",
+    "frontend/src/pages/DashboardPage.tsx",
+    "frontend/src/pages/InventoryPage.tsx",
+    "frontend/src/pages/LoginPage.tsx",
+    "frontend/src/pages/MenuPage.tsx",
+    "frontend/src/pages/SalesPage.tsx",
+    "frontend/src/pages/SubscriptionsPage.tsx",
+    "frontend/src/utils/csvExport.ts",
+    "frontend/tailwind.config.js",
+    "project_state.json"
+  ]
+}
