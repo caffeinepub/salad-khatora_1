@@ -1,23 +1,18 @@
 import Array "mo:core/Array";
 import List "mo:core/List";
-import Principal "mo:core/Principal";
+import Runtime "mo:core/Runtime";
 import Order "mo:core/Order";
 import Int "mo:core/Int";
-import Runtime "mo:core/Runtime";
-import Iter "mo:core/Iter";
+import Map "mo:core/Map";
 import Set "mo:core/Set";
 import Time "mo:core/Time";
-import Map "mo:core/Map";
-import Migration "migration";
+import Nat "mo:core/Nat";
+import Float "mo:core/Float";
 
-(with migration = Migration.run)
 actor {
   type Weight = {
-    value : Int; // In grams
-    unit : {
-      #grams;
-      #kilograms;
-    };
+    value : Int;
+    unit : { #grams; #kilograms };
   };
 
   type Ingredient = {
@@ -37,15 +32,11 @@ actor {
     lowStockThreshold : Weight;
   };
 
-  type BowlSize = {
-    #small; // 250gm
-    #medium; // 350gm
-    #large; // 500gm
-  };
+  type BowlSize = { #small; #medium; #large };
 
   type RecipeIngredient = {
     ingredientId : Nat;
-    quantity : Weight;
+    quantity : Weight; // quantity in grams for the ingredient
   };
 
   type Recipe = {
@@ -90,28 +81,96 @@ actor {
     };
   };
 
+  type Subscription = {
+    id : Nat;
+    customerId : Nat;
+    planType : { #weekly6days; #monthly24days };
+    startDate : Text;
+    endDate : Text;
+    bowlSize : BowlSize;
+    price : Float;
+    paymentStatus : { #paid; #pending; #overdue; #cancelled };
+    isActive : Bool;
+    createdAt : Int;
+  };
+
+  type SubscriptionInput = {
+    customerId : Nat;
+    planType : { #weekly6days; #monthly24days };
+    startDate : Text;
+    endDate : Text;
+    bowlSize : BowlSize;
+    price : Float;
+    paymentStatus : { #paid; #pending; #overdue; #cancelled };
+  };
+
+  type InvoiceItem = {
+    recipeId : Nat;
+    quantity : Nat;
+    unitPrice : Float;
+    totalPrice : Float;
+  };
+
+  type PaymentMode = { #cash; #card; #upi };
+
+  type SalesInvoice = {
+    id : Nat;
+    customerId : ?Nat;
+    invoiceDate : Int;
+    items : [InvoiceItem];
+    discount : Float;
+    paymentMode : PaymentMode;
+    totalAmount : Float;
+  };
+
+  type InvoiceInputItem = {
+    recipeId : Nat;
+    quantity : Nat;
+    unitPrice : Float;
+  };
+
+  type InvoiceInput = {
+    customerId : ?Nat;
+    invoiceDate : Int;
+    items : [InvoiceInputItem];
+    discount : Float;
+    paymentMode : PaymentMode;
+  };
+
+  type InventoryAdjustment = {
+    ingredientId : Nat;
+    quantityChanged : Weight;
+    timestamp : Int;
+    reason : { #sale; #restock };
+    relatedInvoiceId : ?Nat;
+  };
+
   var nextIngredientId = 1;
   var nextRecipeId = 1;
   var nextCustomerId = 1;
+  var nextSubscriptionId = 1;
+  var nextInvoiceId = 1;
 
-  let activeSessions = Set.empty<SessionId>();
+  let activeSessions = Map.empty<Text, ()>();
   let ingredients = Map.empty<Nat, Ingredient>();
   let recipes = Map.empty<Nat, Recipe>();
   let customers = Map.empty<Nat, Customer>();
+  let subscriptions = Map.empty<Nat, Subscription>();
+  let salesInvoices = Map.empty<Nat, SalesInvoice>();
+  let inventoryAdjustments = Map.empty<Nat, List.List<InventoryAdjustment>>();
 
-  // Authentication & session management
   public shared ({ caller }) func createSession() : async SessionId {
     let sessionId = caller.toText();
-    activeSessions.add(sessionId);
+    activeSessions.add(sessionId, ());
     sessionId;
   };
 
   public query ({ caller }) func isSessionActive(sessionId : SessionId) : async Bool {
-    activeSessions.contains(sessionId);
+    activeSessions.containsKey(sessionId);
   };
 
   func validateSession(sessionId : SessionId) : () {
-    if (not activeSessions.contains(sessionId)) {
+    if (not activeSessions.containsKey(sessionId)) {
       Runtime.trap("Invalid session. Please authenticate.");
     };
   };
@@ -120,7 +179,6 @@ actor {
     activeSessions.remove(sessionId);
   };
 
-  // Inventory management with persistent state
   public shared ({ caller }) func addIngredient(sessionId : SessionId, ingredient : IngredientInput) : async () {
     validateSession(sessionId);
 
@@ -173,7 +231,6 @@ actor {
     );
   };
 
-  // Recipe management with persistent state
   public shared ({ caller }) func addRecipe(sessionId : SessionId, recipe : RecipeInput) : async () {
     validateSession(sessionId);
 
@@ -234,7 +291,6 @@ actor {
     };
   };
 
-  // Customer management
   public shared ({ caller }) func addCustomer(sessionId : SessionId, customerData : CustomerInput) : async Nat {
     let currentTime = Time.now();
 
@@ -277,5 +333,278 @@ actor {
 
   public query ({ caller }) func getCustomers() : async [Customer] {
     customers.values().toArray();
+  };
+
+  // Subscription Management
+  public shared ({ caller }) func addSubscription(sessionId : SessionId, subscriptionInput : SubscriptionInput) : async Nat {
+    validateSession(sessionId);
+    let currentTime = Time.now();
+
+    let newSubscription : Subscription = {
+      id = nextSubscriptionId;
+      customerId = subscriptionInput.customerId;
+      planType = subscriptionInput.planType;
+      startDate = subscriptionInput.startDate;
+      endDate = subscriptionInput.endDate;
+      bowlSize = subscriptionInput.bowlSize;
+      price = subscriptionInput.price;
+      paymentStatus = subscriptionInput.paymentStatus;
+      isActive = true;
+      createdAt = currentTime;
+    };
+
+    subscriptions.add(nextSubscriptionId, newSubscription);
+    nextSubscriptionId += 1;
+    newSubscription.id;
+  };
+
+  public query ({ caller }) func getSubscriptions(customerId : ?Nat) : async [Subscription] {
+    subscriptions.values().toArray().filter(
+      func(sub) {
+        switch (customerId) {
+          case (null) { true };
+          case (?id) { sub.customerId == id };
+        };
+      }
+    );
+  };
+
+  public shared ({ caller }) func updateSubscription(sessionId : SessionId, subscriptionId : Nat, updatedInput : SubscriptionInput) : async () {
+    validateSession(sessionId);
+
+    switch (subscriptions.get(subscriptionId)) {
+      case (null) {
+        Runtime.trap("Subscription not found");
+      };
+      case (?existingSubscription) {
+        let updatedSubscription = {
+          existingSubscription with
+          customerId = updatedInput.customerId;
+          planType = updatedInput.planType;
+          startDate = updatedInput.startDate;
+          endDate = updatedInput.endDate;
+          bowlSize = updatedInput.bowlSize;
+          price = updatedInput.price;
+          paymentStatus = updatedInput.paymentStatus;
+        };
+        subscriptions.add(subscriptionId, updatedSubscription);
+      };
+    };
+  };
+
+  public shared ({ caller }) func deleteSubscription(sessionId : SessionId, subscriptionId : Nat) : async () {
+    validateSession(sessionId);
+    subscriptions.remove(subscriptionId);
+  };
+
+  public query ({ caller }) func getExpiringSubscriptions() : async [Subscription] {
+    let currentTimeInt = Time.now();
+    let expiringThreshold = currentTimeInt + (2 * 24 * 60 * 60 * 1000000000); // 2 days in nanoseconds
+
+    subscriptions.values().toArray().filter(
+      func(sub) {
+        switch (parseSubscriptionEndDate(sub.endDate)) {
+          case (?endDateTimestamp) {
+            endDateTimestamp >= currentTimeInt and endDateTimestamp <= expiringThreshold
+          };
+          case (null) { false };
+        };
+      }
+    );
+  };
+
+  func parseSubscriptionEndDate(_dateString : Text) : ?Int {
+    // Only nanoseconds are supported in times. Converting string to nanoseconds required.
+    null;
+  };
+
+  // Sales Module implementation
+  public shared ({ caller }) func createInvoice(sessionId : SessionId, invoiceInput : InvoiceInput) : async Nat {
+    validateSession(sessionId);
+
+    let currentTime = Time.now();
+    let items = invoiceInput.items.map(
+      func(itemInput) {
+        {
+          recipeId = itemInput.recipeId;
+          quantity = itemInput.quantity;
+          unitPrice = itemInput.unitPrice;
+          totalPrice = itemInput.unitPrice * itemInput.quantity.toFloat();
+        };
+      }
+    );
+    let totalAmount = items.foldLeft(
+      0.0,
+      func(acc, item) {
+        acc + item.totalPrice;
+      },
+    ) - invoiceInput.discount;
+
+    let newInvoice : SalesInvoice = {
+      id = nextInvoiceId;
+      customerId = invoiceInput.customerId;
+      invoiceDate = currentTime;
+      items;
+      discount = invoiceInput.discount;
+      paymentMode = invoiceInput.paymentMode;
+      totalAmount;
+    };
+
+    salesInvoices.add(nextInvoiceId, newInvoice);
+
+    adjustInventoryForSale(items, nextInvoiceId);
+
+    nextInvoiceId += 1;
+    newInvoice.id;
+  };
+
+  func adjustInventoryForSale(invoiceItems : [InvoiceItem], invoiceId : Nat) {
+    let inventoryAdjustmentsList = List.empty<(Nat, InventoryAdjustment)>();
+
+    for (item in invoiceItems.values()) {
+      switch (recipes.get(item.recipeId)) {
+        case (null) {};
+        case (?recipe) {
+          for (ingredient in recipe.ingredients.values()) {
+            inventoryAdjustmentsList.add(
+              (
+                ingredient.ingredientId,
+                {
+                  ingredientId = ingredient.ingredientId;
+                  quantityChanged = {
+                    value = -ingredient.quantity.value * item.quantity.toInt();
+                    unit = ingredient.quantity.unit;
+                  };
+                  timestamp = Time.now();
+                  reason = #sale;
+                  relatedInvoiceId = ?invoiceId;
+                },
+              ),
+            );
+          };
+        };
+      };
+    };
+
+    let inventoryAdjustmentsArray = inventoryAdjustmentsList.toArray();
+    for (adjustment in inventoryAdjustmentsArray.values()) {
+      switch (adjustment) {
+        case ((ingredientId, inventoryAdjustment)) {
+          let currentAdjustments = switch (inventoryAdjustments.get(ingredientId)) {
+            case (null) {
+              let newList = List.empty<InventoryAdjustment>();
+              newList.add(inventoryAdjustment);
+              newList;
+            };
+            case (?existingAdjustments) {
+              existingAdjustments.add(inventoryAdjustment);
+              existingAdjustments;
+            };
+          };
+
+          inventoryAdjustments.add(ingredientId, currentAdjustments);
+
+          switch (ingredients.get(ingredientId)) {
+            case (?existingIngredient) {
+              let currentQuantity = existingIngredient.quantity.value;
+              let quantityChange = inventoryAdjustment.quantityChanged.value; // Change (diff)
+              let newQuantity = currentQuantity + quantityChange; // Add diff to quantity and persist data type change
+              let updatedIngredient = {
+                existingIngredient with
+                quantity = {
+                  value = newQuantity;
+                  unit = existingIngredient.quantity.unit;
+                };
+              };
+              ingredients.add(ingredientId, updatedIngredient);
+            };
+            case (null) {};
+          };
+        };
+      };
+    };
+  };
+
+  public query ({ caller }) func getInvoice(invoiceId : Nat) : async ?SalesInvoice {
+    salesInvoices.get(invoiceId);
+  };
+
+  public query ({ caller }) func getAllInvoices() : async [SalesInvoice] {
+    salesInvoices.values().toArray();
+  };
+
+  public query ({ caller }) func getInvoicesByCustomer(customerId : Nat) : async [SalesInvoice] {
+    let allInvoices = salesInvoices.values().toArray();
+    allInvoices.filter(
+      func(invoice) {
+        switch (invoice.customerId) {
+          case (?id) { id == customerId };
+          case (null) { false };
+        };
+      }
+    );
+  };
+
+  public query ({ caller }) func getInventoryAdjustments(ingredientId : Nat) : async [InventoryAdjustment] {
+    switch (inventoryAdjustments.get(ingredientId)) {
+      case (null) { [] };
+      case (?adjustmentsList) {
+        let result = adjustmentsList.toArray();
+        result.map(
+          func(adjustment) { adjustment }, // Map over the array and return each adjustment
+        );
+      };
+    };
+  };
+
+  public shared ({ caller }) func restockIngredient(
+    sessionId : SessionId,
+    ingredientId : Nat,
+    quantity : Weight,
+  ) : async () {
+    validateSession(sessionId);
+
+    if (quantity.value <= 0) {
+      Runtime.trap("Quantity must be positive");
+    };
+
+    switch (ingredients.get(ingredientId)) {
+      case (null) {
+        Runtime.trap("Ingredient not found");
+      };
+      case (?existingIngredient) {
+        let updatedIngredient = {
+          existingIngredient with
+          quantity = {
+            value = existingIngredient.quantity.value + quantity.value;
+            unit = existingIngredient.quantity.unit;
+          };
+        };
+
+        ingredients.add(ingredientId, updatedIngredient);
+
+        let adjustment : InventoryAdjustment = {
+          ingredientId;
+          quantityChanged = quantity;
+          timestamp = Time.now();
+          reason = #restock;
+          relatedInvoiceId = null;
+        };
+
+        let currentAdjustments = switch (inventoryAdjustments.get(ingredientId)) {
+          case (null) {
+            let newList = List.empty<InventoryAdjustment>();
+            newList.add(adjustment);
+            newList;
+          };
+          case (?existingAdjustments) {
+            existingAdjustments.add(adjustment);
+            existingAdjustments;
+          };
+        };
+
+        inventoryAdjustments.add(ingredientId, currentAdjustments);
+      };
+    };
   };
 };

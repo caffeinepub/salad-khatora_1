@@ -42,10 +42,39 @@ export interface IngredientInput {
   'quantity' : Weight,
   'costPricePerUnit' : number,
 }
+export interface InventoryAdjustment {
+  'timestamp' : bigint,
+  'relatedInvoiceId' : [] | [bigint],
+  'ingredientId' : bigint,
+  'quantityChanged' : Weight,
+  'reason' : { 'sale' : null } |
+    { 'restock' : null },
+}
 export interface InventoryState {
   'totalValue' : number,
   'ingredients' : Array<Ingredient>,
 }
+export interface InvoiceInput {
+  'invoiceDate' : bigint,
+  'discount' : number,
+  'paymentMode' : PaymentMode,
+  'customerId' : [] | [bigint],
+  'items' : Array<InvoiceInputItem>,
+}
+export interface InvoiceInputItem {
+  'recipeId' : bigint,
+  'quantity' : bigint,
+  'unitPrice' : number,
+}
+export interface InvoiceItem {
+  'recipeId' : bigint,
+  'quantity' : bigint,
+  'unitPrice' : number,
+  'totalPrice' : number,
+}
+export type PaymentMode = { 'upi' : null } |
+  { 'card' : null } |
+  { 'cash' : null };
 export interface Recipe {
   'id' : bigint,
   'name' : string,
@@ -61,7 +90,45 @@ export interface RecipeInput {
   'bowlSize' : BowlSize,
   'ingredients' : Array<RecipeIngredient>,
 }
+export interface SalesInvoice {
+  'id' : bigint,
+  'invoiceDate' : bigint,
+  'totalAmount' : number,
+  'discount' : number,
+  'paymentMode' : PaymentMode,
+  'customerId' : [] | [bigint],
+  'items' : Array<InvoiceItem>,
+}
 export type SessionId = string;
+export interface Subscription {
+  'id' : bigint,
+  'paymentStatus' : { 'cancelled' : null } |
+    { 'pending' : null } |
+    { 'paid' : null } |
+    { 'overdue' : null },
+  'endDate' : string,
+  'createdAt' : bigint,
+  'isActive' : boolean,
+  'customerId' : bigint,
+  'price' : number,
+  'planType' : { 'weekly6days' : null } |
+    { 'monthly24days' : null },
+  'bowlSize' : BowlSize,
+  'startDate' : string,
+}
+export interface SubscriptionInput {
+  'paymentStatus' : { 'cancelled' : null } |
+    { 'pending' : null } |
+    { 'paid' : null } |
+    { 'overdue' : null },
+  'endDate' : string,
+  'customerId' : bigint,
+  'price' : number,
+  'planType' : { 'weekly6days' : null } |
+    { 'monthly24days' : null },
+  'bowlSize' : BowlSize,
+  'startDate' : string,
+}
 export interface Weight {
   'value' : bigint,
   'unit' : { 'kilograms' : null } |
@@ -71,23 +138,37 @@ export interface _SERVICE {
   'addCustomer' : ActorMethod<[SessionId, CustomerInput], bigint>,
   'addIngredient' : ActorMethod<[SessionId, IngredientInput], undefined>,
   'addRecipe' : ActorMethod<[SessionId, RecipeInput], undefined>,
+  'addSubscription' : ActorMethod<[SessionId, SubscriptionInput], bigint>,
+  'createInvoice' : ActorMethod<[SessionId, InvoiceInput], bigint>,
   'createSession' : ActorMethod<[], SessionId>,
   'deleteCustomer' : ActorMethod<[SessionId, bigint], undefined>,
+  'deleteSubscription' : ActorMethod<[SessionId, bigint], undefined>,
   'endSession' : ActorMethod<[SessionId], undefined>,
   'getAllIngredients' : ActorMethod<[], Array<Ingredient>>,
+  'getAllInvoices' : ActorMethod<[], Array<SalesInvoice>>,
   'getAllRecipes' : ActorMethod<[], Array<Recipe>>,
   'getCustomers' : ActorMethod<[], Array<Customer>>,
+  'getExpiringSubscriptions' : ActorMethod<[], Array<Subscription>>,
   'getIngredient' : ActorMethod<[bigint], [] | [Ingredient]>,
+  'getInventoryAdjustments' : ActorMethod<[bigint], Array<InventoryAdjustment>>,
   'getInventoryState' : ActorMethod<[], InventoryState>,
+  'getInvoice' : ActorMethod<[bigint], [] | [SalesInvoice]>,
+  'getInvoicesByCustomer' : ActorMethod<[bigint], Array<SalesInvoice>>,
   'getLowStockIngredients' : ActorMethod<[], Array<Ingredient>>,
   'getRecipe' : ActorMethod<[bigint], [] | [Recipe]>,
+  'getSubscriptions' : ActorMethod<[[] | [bigint]], Array<Subscription>>,
   'isSessionActive' : ActorMethod<[SessionId], boolean>,
+  'restockIngredient' : ActorMethod<[SessionId, bigint, Weight], undefined>,
   'updateCustomer' : ActorMethod<[SessionId, bigint, CustomerInput], undefined>,
   'updateIngredient' : ActorMethod<
     [SessionId, bigint, IngredientInput],
     undefined
   >,
   'updateRecipe' : ActorMethod<[SessionId, bigint, RecipeInput], undefined>,
+  'updateSubscription' : ActorMethod<
+    [SessionId, bigint, SubscriptionInput],
+    undefined
+  >,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

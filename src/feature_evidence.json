@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-replace-the-placeholder-customerspage-with-a-functional-customer-management-interface-that-displays-a-list-of-existing-customers-and-provides-an-add-customer-button-to-open-a-form-dialog",
-      "featureTitle": "Replace the placeholder CustomersPage with a functional customer management interface that displays a list of existing customers and provides an 'Add Customer' button to open a form dialog",
+      "featureId": "feature-fix-the-error-on-the-sales-route-that-displays-something-went-wrong-and-prevents-access-to-the-invoice-creation-page",
+      "featureTitle": "Fix the error on the /sales route that displays 'Something went wrong!' and prevents access to the invoice creation page",
       "files": [
-        "frontend/src/pages/CustomersPage.tsx"
+        "frontend/src/pages/SalesPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -15,15 +15,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-14"
+        "REQ-1"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-create-a-customerform-component-with-fields-for-name-mobile-number-email-reference-source-preferences-and-address-using-react-hook-form-for-validation-and-state-management",
-      "featureTitle": "Create a CustomerForm component with fields for name, mobile number, email, reference source, preferences, and address, using react-hook-form for validation and state management",
+      "featureId": "feature-implement-customer-management-in-the-invoice-form-with-a-dropdown-to-select-from-pre-registered-customers-stored-in-the-backend-customer-database",
+      "featureTitle": "Implement customer management in the invoice form with a dropdown to select from pre-registered customers stored in the backend customer database",
       "files": [
-        "frontend/src/components/CustomerForm.tsx"
+        "frontend/src/components/InvoiceForm.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -33,15 +33,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-15"
+        "REQ-2"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-create-a-customerlist-component-that-displays-customer-cards-in-a-grid-layout-showing-name-mobile-email-and-action-buttons-for-editing",
-      "featureTitle": "Create a CustomerList component that displays customer cards in a grid layout showing name, mobile, email, and action buttons for editing",
+      "featureId": "feature-add-the-ability-to-enter-a-new-customer-name-directly-in-the-invoice-form-when-creating-an-invoice-even-if-the-customer-is-not-pre-registered",
+      "featureTitle": "Add the ability to enter a new customer name directly in the invoice form when creating an invoice, even if the customer is not pre-registered",
       "files": [
-        "frontend/src/components/CustomerList.tsx"
+        "frontend/src/components/InvoiceForm.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -51,15 +51,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-17"
+        "REQ-3"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-react-query-hooks-for-customer-data-fetching-and-mutations-usecustomers-useaddcustomer-useupdatecustomer-in-usequeries-ts",
-      "featureTitle": "Add React Query hooks for customer data fetching and mutations (useCustomers, useAddCustomer, useUpdateCustomer) in useQueries.ts",
+      "featureId": "feature-display-all-available-recipes-in-the-invoice-form-with-a-search-and-filter-interface-to-quickly-find-items",
+      "featureTitle": "Display all available recipes in the invoice form with a search and filter interface to quickly find items",
       "files": [
-        "frontend/src/hooks/useQueries.ts"
+        "frontend/src/components/InvoiceForm.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -69,7 +69,98 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-18"
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-show-recipe-prices-alongside-recipe-names-in-the-invoice-item-selection-interface",
+      "featureTitle": "Show recipe prices alongside recipe names in the invoice item selection interface",
+      "files": [
+        "frontend/src/components/InvoiceForm.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-allow-adding-multiple-recipe-items-with-quantities-to-a-single-invoice",
+      "featureTitle": "Allow adding multiple recipe items with quantities to a single invoice",
+      "files": [
+        "frontend/src/components/InvoiceForm.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-capture-comprehensive-invoice-details-including-customer-information-items-with-quantities-pricing-invoice-date-payment-method-notes-and-tax-calculations",
+      "featureTitle": "Capture comprehensive invoice details including customer information, items with quantities, pricing, invoice date, payment method, notes, and tax calculations",
+      "files": [
+        "frontend/src/components/InvoiceForm.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-automatically-deduct-ingredient-quantities-from-inventory-based-on-the-recipes-and-quantities-in-the-invoice-when-the-invoice-is-saved",
+      "featureTitle": "Automatically deduct ingredient quantities from inventory based on the recipes and quantities in the invoice when the invoice is saved",
+      "files": [
+        "frontend/src/components/InvoiceForm.tsx",
+        "frontend/src/pages/InventoryPage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-8"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-calculate-and-display-the-invoice-subtotal-discount-tax-and-total-amount-in-real-time-as-items-are-added",
+      "featureTitle": "Calculate and display the invoice subtotal, discount, tax, and total amount in real-time as items are added",
+      "files": [
+        "frontend/src/components/InvoiceForm.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-9"
       ],
       "confidence": "high"
     }

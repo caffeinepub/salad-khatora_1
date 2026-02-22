@@ -1,84 +1,129 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-22T00:35:41.091Z",
+  "generatedAt": "2026-02-22T16:25:09.903Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 5,
-    "implemented": 4,
+    "total": 9,
+    "implemented": 9,
     "items": [
       {
-        "id": "REQ-14",
-        "summary": "Replace the placeholder CustomersPage with a functional customer management interface that displays a list of existing customers and provides an 'Add Customer' button to open a form dialog",
+        "id": "REQ-1",
+        "summary": "Fix the error on the /sales route that displays 'Something went wrong!' and prevents access to the invoice creation page",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/CustomersPage.tsx"
+          "frontend/src/pages/SalesPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/CustomersPage.tsx"
+          "frontend/src/pages/SalesPage.tsx"
         ]
       },
       {
-        "id": "REQ-15",
-        "summary": "Create a CustomerForm component with fields for name, mobile number, email, reference source, preferences, and address, using react-hook-form for validation and state management",
+        "id": "REQ-2",
+        "summary": "Implement customer management in the invoice form with a dropdown to select from pre-registered customers stored in the backend customer database",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/CustomerForm.tsx"
+          "frontend/src/components/InvoiceForm.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/CustomerForm.tsx"
+          "frontend/src/components/InvoiceForm.tsx"
         ]
       },
       {
-        "id": "REQ-16",
-        "summary": "Add backend CRUD operations for customer management including addCustomer, updateCustomer, deleteCustomer, and getCustomers functions in the main actor",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-17",
-        "summary": "Create a CustomerList component that displays customer cards in a grid layout showing name, mobile, email, and action buttons for editing",
+        "id": "REQ-3",
+        "summary": "Add the ability to enter a new customer name directly in the invoice form when creating an invoice, even if the customer is not pre-registered",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/CustomerList.tsx"
+          "frontend/src/components/InvoiceForm.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/CustomerList.tsx"
+          "frontend/src/components/InvoiceForm.tsx"
         ]
       },
       {
-        "id": "REQ-18",
-        "summary": "Add React Query hooks for customer data fetching and mutations (useCustomers, useAddCustomer, useUpdateCustomer) in useQueries.ts",
+        "id": "REQ-4",
+        "summary": "Display all available recipes in the invoice form with a search and filter interface to quickly find items",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts"
+          "frontend/src/components/InvoiceForm.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useQueries.ts"
+          "frontend/src/components/InvoiceForm.tsx"
+        ]
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Show recipe prices alongside recipe names in the invoice item selection interface",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/InvoiceForm.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/InvoiceForm.tsx"
+        ]
+      },
+      {
+        "id": "REQ-6",
+        "summary": "Allow adding multiple recipe items with quantities to a single invoice",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/InvoiceForm.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/InvoiceForm.tsx"
+        ]
+      },
+      {
+        "id": "REQ-7",
+        "summary": "Capture comprehensive invoice details including customer information, items with quantities, pricing, invoice date, payment method, notes, and tax calculations",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/InvoiceForm.tsx",
+          "frontend/src/components/InvoiceDetailsDialog.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/InvoiceForm.tsx"
+        ]
+      },
+      {
+        "id": "REQ-8",
+        "summary": "Automatically deduct ingredient quantities from inventory based on the recipes and quantities in the invoice when the invoice is saved",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/InvoiceForm.tsx",
+          "frontend/src/pages/InventoryPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/InvoiceForm.tsx",
+          "frontend/src/pages/InventoryPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-9",
+        "summary": "Calculate and display the invoice subtotal, discount, tax, and total amount in real-time as items are added",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/InvoiceForm.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/InvoiceForm.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
     "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
-    "build-template/README.md",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/components/CustomerForm.tsx",
-    "frontend/src/components/CustomerList.tsx",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useQueries.ts",
-    "frontend/src/pages/CustomersPage.tsx",
+    "frontend/src/components/InventoryAdjustmentHistory.tsx",
+    "frontend/src/components/InvoiceForm.tsx",
+    "frontend/src/pages/InventoryPage.tsx",
+    "frontend/src/pages/SalesPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

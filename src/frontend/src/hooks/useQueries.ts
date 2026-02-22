@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
 import { useAuth } from '../contexts/AuthContext';
-import type { Ingredient, Recipe, Customer, IngredientInput, RecipeInput, CustomerInput } from '../backend';
+import type { Ingredient, Recipe, Customer, Subscription, IngredientInput, RecipeInput, CustomerInput, SubscriptionInput, SalesInvoice, InvoiceInput } from '../backend';
 
 export function useIngredients() {
   const { actor, isFetching } = useActor();
@@ -164,5 +164,130 @@ export function useUpdateCustomer() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['customers'] });
     },
+  });
+}
+
+// Subscription hooks
+export function useSubscriptions(customerId?: bigint | null) {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<Subscription[]>({
+    queryKey: ['subscriptions', customerId?.toString()],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getSubscriptions(customerId || null);
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useAddSubscription() {
+  const { actor } = useActor();
+  const { sessionId } = useAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (subscriptionInput: SubscriptionInput) => {
+      if (!actor || !sessionId) throw new Error('Not authenticated');
+      return actor.addSubscription(sessionId, subscriptionInput);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
+      queryClient.invalidateQueries({ queryKey: ['expiringSubscriptions'] });
+    },
+  });
+}
+
+export function useUpdateSubscription() {
+  const { actor } = useActor();
+  const { sessionId } = useAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, subscriptionInput }: { id: bigint; subscriptionInput: SubscriptionInput }) => {
+      if (!actor || !sessionId) throw new Error('Not authenticated');
+      return actor.updateSubscription(sessionId, id, subscriptionInput);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
+      queryClient.invalidateQueries({ queryKey: ['expiringSubscriptions'] });
+    },
+  });
+}
+
+export function useDeleteSubscription() {
+  const { actor } = useActor();
+  const { sessionId } = useAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (subscriptionId: bigint) => {
+      if (!actor || !sessionId) throw new Error('Not authenticated');
+      return actor.deleteSubscription(sessionId, subscriptionId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
+      queryClient.invalidateQueries({ queryKey: ['expiringSubscriptions'] });
+    },
+  });
+}
+
+export function useExpiringSubscriptions() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<Subscription[]>({
+    queryKey: ['expiringSubscriptions'],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getExpiringSubscriptions();
+    },
+    enabled: !!actor && !isFetching,
+    refetchInterval: 300000, // Refetch every 5 minutes
+  });
+}
+
+// Sales Invoice hooks
+export function useInvoices() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<SalesInvoice[]>({
+    queryKey: ['invoices'],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getAllInvoices();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useCreateInvoice() {
+  const { actor } = useActor();
+  const { sessionId } = useAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (invoiceInput: InvoiceInput) => {
+      if (!actor || !sessionId) throw new Error('Not authenticated');
+      return actor.createInvoice(sessionId, invoiceInput);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      queryClient.invalidateQueries({ queryKey: ['customers'] });
+      queryClient.invalidateQueries({ queryKey: ['ingredients'] });
+      queryClient.invalidateQueries({ queryKey: ['inventoryState'] });
+    },
+  });
+}
+
+export function useCustomerInvoices(customerId?: bigint) {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<SalesInvoice[]>({
+    queryKey: ['customerInvoices', customerId?.toString()],
+    queryFn: async () => {
+      if (!actor || !customerId) return [];
+      return actor.getInvoicesByCustomer(customerId);
+    },
+    enabled: !!actor && !isFetching && !!customerId,
   });
 }

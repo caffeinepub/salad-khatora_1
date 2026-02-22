@@ -1,16 +1,17 @@
 # Specification
 
 ## Summary
-**Goal:** Implement a functional customer management page with the ability to add and edit customer details.
+**Goal:** Fix the /sales route error and implement a comprehensive invoice creation system with customer selection, multiple line items, automatic inventory deduction, and complete invoice details capture.
 
 **Planned changes:**
-- Replace the placeholder CustomersPage with a functional customer list display showing existing customers in a grid layout
-- Add an "Add Customer" button that opens a form dialog for creating new customers
-- Create a CustomerForm component with fields for name, mobile number, email, reference source, preferences, and address
-- Implement form validation for mobile number and email formats using react-hook-form
-- Add backend CRUD operations (addCustomer, updateCustomer, getCustomers) in the main actor with session protection
-- Create a CustomerList component that displays customer cards with name, mobile, email, and edit buttons
-- Add React Query hooks (useCustomers, useAddCustomer, useUpdateCustomer) for data fetching and mutations
-- Enable editing of existing customers by opening the CustomerForm dialog with pre-filled data
+- Fix the "Something went wrong!" error on the /sales route to restore access to invoice creation
+- Add customer dropdown in invoice form showing pre-registered customers from the backend
+- Enable inline entry of new customer names directly in the invoice form
+- Display all available recipes with search and filter functionality in item selection
+- Show recipe prices alongside recipe names in the item selection interface
+- Allow adding multiple recipe items with quantities to a single invoice
+- Capture comprehensive invoice details including customer info, items, quantities, pricing, invoice date, payment method, notes, and tax calculations
+- Implement automatic ingredient deduction from inventory when an invoice is saved, based on recipes and quantities
+- Calculate and display subtotal, discount, tax, and total amount in real-time as items are added or modified
 
-**User-visible outcome:** Users can view all customers in a grid layout, add new customers using a form dialog with validated fields (name, mobile, email, reference source, preferences, address), and edit existing customer information. The page follows the same design pattern as the Inventory and Menu pages.
+**User-visible outcome:** Users can access the /sales route without errors, create invoices by selecting pre-registered customers or entering new customer names, add multiple recipe items with quantities, see prices and totals calculated in real-time, and have ingredient quantities automatically deducted from inventory when the invoice is saved.

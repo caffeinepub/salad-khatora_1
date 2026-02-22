@@ -1,152 +1,86 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 5,
-  "summary": "Full-stack web application for Salad Khatora, a salad business management system. Features include: (1) Inventory management with ingredient tracking (name, quantity, unit, cost, supplier, low-stock threshold) and automatic value calculation. (2) Menu management for salad bowls (250gm, 350gm, 500gm) with recipe-to-ingredient mapping that auto-deducts inventory on sales. (3) Billing system for generating invoices with customer details, items, pricing, discounts, payment mode, and date. (4) Dashboard showing daily/weekly/monthly sales, profit calculations, top-selling bowls, and low-stock alerts. (5) Subscription management for weekly (6 days) and monthly (24 days) plans with customer details, dates, pricing, payment status, and expiry alerts (2 days before end). (6) In-app alert system (bell icon) for low inventory and subscription expiry notifications. (7) Admin authentication using Internet Identity (passkeys, social logins). (8) Customer database with name, mobile, email, reference, preferences, and address. (9) Reporting with CSV export for sales and inventory. (10) Mobile-friendly UI with white and green theme.",
+  "projectStateVersion": 3,
+  "summary": "Salad Khatora - a sales and inventory management system for a food business with recipes, ingredients, invoicing, and automatic inventory deduction",
   "architectural_notes": [
-    "Recipe-to-ingredient mapping system required for automatic inventory deduction on sales",
-    "Cost tracking system needed to calculate profit (selling price vs cost price)",
-    "Subscription expiry alert system triggers 2 days before end date",
-    "Internet Identity integration for secure admin authentication",
-    "In-app notification system (bell icon) for alerts, no external email/SMS"
+    "Invoice system with customer database and on-the-fly customer creation",
+    "Recipe-based inventory management with automatic ingredient deduction",
+    "Multi-item invoice support with search/filter interface for recipes"
   ],
   "known_issues": [
-    "Customer management form not allowing user to add customer details - UI/functionality issue"
+    "Error on /sales route preventing access to new invoice page"
   ],
   "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-implement-internet-identity-authentication-for-admin-login-with-secure-session-management",
-      "title": "Implement Internet Identity authentication for admin login with secure session management",
+      "id": "feature-fix-the-error-on-the-sales-route-that-displays-something-went-wrong-and-prevents-access-to-the-invoice-creation-page",
+      "title": "Fix the error on the /sales route that displays 'Something went wrong!' and prevents access to the invoice creation page",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-create-inventory-management-system-with-fields-for-ingredient-name-current-quantity-in-grams-or-kg-unit-type-grams-kg-cost-price-per-unit-supplier-name-and-low-stock-threshold",
-      "title": "Create inventory management system with fields for ingredient name, current quantity (in grams or kg), unit type (grams/kg), cost price per unit, supplier name, and low-stock threshold",
+      "id": "feature-implement-customer-management-in-the-invoice-form-with-a-dropdown-to-select-from-pre-registered-customers-stored-in-the-backend-customer-database",
+      "title": "Implement customer management in the invoice form with a dropdown to select from pre-registered customers stored in the backend customer database",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-implement-automatic-calculation-of-total-inventory-value-based-on-ingredient-quantities-and-cost-prices",
-      "title": "Implement automatic calculation of total inventory value based on ingredient quantities and cost prices",
+      "id": "feature-add-the-ability-to-enter-a-new-customer-name-directly-in-the-invoice-form-when-creating-an-invoice-even-if-the-customer-is-not-pre-registered",
+      "title": "Add the ability to enter a new customer name directly in the invoice form when creating an invoice, even if the customer is not pre-registered",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-create-menu-management-for-salad-bowls-with-three-sizes-250gm-350gm-and-500gm-where-each-bowl-recipe-is-linked-to-specific-ingredient-quantities",
-      "title": "Create menu management for salad bowls with three sizes: 250gm, 350gm, and 500gm, where each bowl recipe is linked to specific ingredient quantities",
+      "id": "feature-display-all-available-recipes-in-the-invoice-form-with-a-search-and-filter-interface-to-quickly-find-items",
+      "title": "Display all available recipes in the invoice form with a search and filter interface to quickly find items",
       "reqIds": [
         "REQ-4"
       ],
       "version": 1
     },
     {
-      "id": "feature-implement-billing-and-sales-system-to-generate-invoices-with-customer-name-phone-number-items-ordered-quantity-price-discount-payment-mode-and-date-with-automatic-inventory-deduction-based-on-recipe-mapping",
-      "title": "Implement billing and sales system to generate invoices with customer name, phone number, items ordered, quantity, price, discount, payment mode, and date, with automatic inventory deduction based on recipe mapping",
+      "id": "feature-show-recipe-prices-alongside-recipe-names-in-the-invoice-item-selection-interface",
+      "title": "Show recipe prices alongside recipe names in the invoice item selection interface",
       "reqIds": [
         "REQ-5"
       ],
       "version": 1
     },
     {
-      "id": "feature-create-dashboard-showing-daily-weekly-and-monthly-sales-with-filtering-options",
-      "title": "Create dashboard showing daily, weekly, and monthly sales with filtering options",
+      "id": "feature-allow-adding-multiple-recipe-items-with-quantities-to-a-single-invoice",
+      "title": "Allow adding multiple recipe items with quantities to a single invoice",
       "reqIds": [
         "REQ-6"
       ],
       "version": 1
     },
     {
-      "id": "feature-implement-profit-calculation-on-dashboard-based-on-cost-price-from-ingredients-versus-selling-price-from-invoices",
-      "title": "Implement profit calculation on dashboard based on cost price (from ingredients) versus selling price (from invoices)",
+      "id": "feature-capture-comprehensive-invoice-details-including-customer-information-items-with-quantities-pricing-invoice-date-payment-method-notes-and-tax-calculations",
+      "title": "Capture comprehensive invoice details including customer information, items with quantities, pricing, invoice date, payment method, notes, and tax calculations",
       "reqIds": [
         "REQ-7"
       ],
       "version": 1
     },
     {
-      "id": "feature-display-top-selling-salad-bowls-on-dashboard-with-sales-count-and-revenue",
-      "title": "Display top-selling salad bowls on dashboard with sales count and revenue",
+      "id": "feature-automatically-deduct-ingredient-quantities-from-inventory-based-on-the-recipes-and-quantities-in-the-invoice-when-the-invoice-is-saved",
+      "title": "Automatically deduct ingredient quantities from inventory based on the recipes and quantities in the invoice when the invoice is saved",
       "reqIds": [
         "REQ-8"
       ],
       "version": 1
     },
     {
-      "id": "feature-implement-subscription-management-module-for-weekly-6-days-week-and-monthly-24-days-month-plans-with-customer-details-plan-type-start-date-end-date-bowl-size-price-and-payment-status",
-      "title": "Implement subscription management module for weekly (6 days/week) and monthly (24 days/month) plans with customer details, plan type, start date, end date, bowl size, price, and payment status",
+      "id": "feature-calculate-and-display-the-invoice-subtotal-discount-tax-and-total-amount-in-real-time-as-items-are-added",
+      "title": "Calculate and display the invoice subtotal, discount, tax, and total amount in real-time as items are added",
       "reqIds": [
         "REQ-9"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-create-in-app-notification-system-with-bell-icon-displaying-alerts-for-low-inventory-below-threshold-and-subscriptions-ending-within-2-days",
-      "title": "Create in-app notification system with bell icon displaying alerts for low inventory (below threshold) and subscriptions ending within 2 days",
-      "reqIds": [
-        "REQ-10"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-create-customer-database-with-fields-for-name-mobile-number-email-reference-source-preferences-and-address",
-      "title": "Create customer database with fields for name, mobile number, email, reference source, preferences, and address",
-      "reqIds": [
-        "REQ-11"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-implement-csv-export-functionality-for-sales-reports-and-inventory-reports",
-      "title": "Implement CSV export functionality for sales reports and inventory reports",
-      "reqIds": [
-        "REQ-12"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-design-mobile-friendly-ui-with-white-and-green-color-scheme-suitable-for-a-small-food-business-owner",
-      "title": "Design mobile-friendly UI with white and green color scheme suitable for a small food business owner",
-      "reqIds": [
-        "REQ-13"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-replace-the-placeholder-customerspage-with-a-functional-customer-management-interface-that-displays-a-list-of-existing-customers-and-provides-an-add-customer-button-to-open-a-form-dialog",
-      "title": "Replace the placeholder CustomersPage with a functional customer management interface that displays a list of existing customers and provides an 'Add Customer' button to open a form dialog",
-      "reqIds": [
-        "REQ-14"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-create-a-customerform-component-with-fields-for-name-mobile-number-email-reference-source-preferences-and-address-using-react-hook-form-for-validation-and-state-management",
-      "title": "Create a CustomerForm component with fields for name, mobile number, email, reference source, preferences, and address, using react-hook-form for validation and state management",
-      "reqIds": [
-        "REQ-15"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-create-a-customerlist-component-that-displays-customer-cards-in-a-grid-layout-showing-name-mobile-email-and-action-buttons-for-editing",
-      "title": "Create a CustomerList component that displays customer cards in a grid layout showing name, mobile, email, and action buttons for editing",
-      "reqIds": [
-        "REQ-17"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-react-query-hooks-for-customer-data-fetching-and-mutations-usecustomers-useaddcustomer-useupdatecustomer-in-usequeries-ts",
-      "title": "Add React Query hooks for customer data fetching and mutations (useCustomers, useAddCustomer, useUpdateCustomer) in useQueries.ts",
-      "reqIds": [
-        "REQ-18"
       ],
       "version": 1
     }
@@ -154,74 +88,51 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Inventory management system with ingredient tracking and automatic value calculation",
+      "summary": "Fix error on /sales route and create comprehensive invoice creation page",
       "reqIds": [],
-      "status": "pending"
+      "status": "in_progress"
     },
     {
       "id": "AR-2",
-      "summary": "Menu management with salad bowl sizes (250gm, 350gm, 500gm) and recipe-to-ingredient mapping",
-      "reqIds": [],
+      "summary": "Customer management: select pre-registered customers or add new ones during invoice creation",
+      "reqIds": [
+        "AR-1"
+      ],
       "status": "pending"
     },
     {
       "id": "AR-3",
-      "summary": "Billing and sales system with invoice generation and automatic inventory deduction",
-      "reqIds": [],
+      "summary": "Recipe selection interface with search/filter functionality showing prices",
+      "reqIds": [
+        "AR-1"
+      ],
       "status": "pending"
     },
     {
       "id": "AR-4",
-      "summary": "Dashboard with sales analytics, profit calculations, top-selling bowls, and low-stock alerts",
-      "reqIds": [],
+      "summary": "Multi-item invoice support with quantities",
+      "reqIds": [
+        "AR-1"
+      ],
       "status": "pending"
     },
     {
       "id": "AR-5",
-      "summary": "Subscription management for weekly and monthly plans with expiry alerts",
-      "reqIds": [],
+      "summary": "Comprehensive invoice details capture (customer info, items, quantities, pricing, date, payment method, notes, tax)",
+      "reqIds": [
+        "AR-1"
+      ],
       "status": "pending"
     },
     {
       "id": "AR-6",
-      "summary": "In-app alert system (bell icon) for low inventory and subscription notifications",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-7",
-      "summary": "Admin authentication using Internet Identity",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-8",
-      "summary": "Customer database with contact details, preferences, and address",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-9",
-      "summary": "CSV export functionality for sales and inventory reports",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-10",
-      "summary": "Mobile-friendly UI with white and green theme",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-13",
-      "summary": "Add backend CRUD operations for customer management including addCustomer, updateCustomer, deleteCustomer, and getCustomers functions in the main actor",
+      "summary": "Automatic inventory deduction based on recipes when invoice is saved",
       "reqIds": [
-        "REQ-16"
+        "AR-1"
       ],
       "status": "pending"
     }
   ],
-  "gameProjectType": "none",
   "projectName": "Salad Khatora",
   "clarification_mode": "instant",
   "clarification_rounds": 0

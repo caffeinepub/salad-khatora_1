@@ -1,44 +1,28 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-22T00:35:41.087Z",
-  "summary": "The implementation successfully covers all five requirements (REQ-14 through REQ-18) for the customer management feature. The backend adds Customer CRUD operations with session protection, the frontend creates CustomerForm and CustomerList components following existing patterns, and React Query hooks are properly implemented. However, there is one notable deviation: the backend Customer type uses 'contactInfo' as a single JSON string field instead of separate fields for mobile, email, referenceSource, and preferences as specified in the BuildRequest.",
+  "generatedAt": "2026-02-22T16:25:09.899Z",
+  "summary": "The diff implements a comprehensive invoice creation system with customer management, recipe selection, automatic inventory deduction, and adjustment history tracking. The /sales route error is fixed by adding proper loading states. Most requirements are addressed, but the diff does not show evidence of recipe pricing in the backend or recipe price display in the selection interface.",
   "missing_requirements": [
     {
-      "id": "REQ-16",
-      "requirement": "Customer type includes separate fields for mobile, email, referenceSource, preferences",
-      "reason": "The backend Customer type uses a single 'contactInfo: Text' field to store JSON-encoded contact data, rather than individual fields as specified. While functionally workable, this deviates from the explicit requirement that the Customer type should have separate fields.",
-      "evidence": [
-        "backend/main.mo"
-      ]
-    }
-  ],
-  "hallucinated_features": [
-    {
-      "description": "Customer active status tracking with isActive, createdAt, and updatedAt fields",
-      "reason": "The Customer type includes isActive (boolean), createdAt, and updatedAt (timestamp) fields that were not requested in any requirement. The BuildRequest only specified: id, name, mobile, email, referenceSource, preferences, and address.",
+      "id": "REQ-5",
+      "requirement": "Show recipe prices alongside recipe names in the invoice item selection interface",
+      "reason": "The diff shows recipe selection in InvoiceForm.tsx with recipeId, recipeName, and bowlSize fields, but no evidence of price being fetched or displayed during recipe selection. The backend Recipe type lacks a price field, and the InvoiceForm's recipe selection interface doesn't show prices being displayed alongside recipe names.",
       "evidence": [
         "backend/main.mo",
-        "backend/migration.mo"
-      ]
-    },
-    {
-      "description": "Active vs total customer statistics display",
-      "reason": "CustomersPage displays two stat cards showing 'Total Customers' and 'Active Customers' counts. The BuildRequest did not request customer analytics, reporting, or activity status tracking (explicitly listed as non-goals).",
-      "evidence": [
-        "frontend/src/pages/CustomersPage.tsx"
+        "frontend/src/components/InvoiceForm.tsx"
       ]
     }
   ],
-  "confidence": 0.92,
+  "hallucinated_features": [],
+  "confidence": 0.85,
   "changed_files": [
     "backend/main.mo",
-    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/components/CustomerForm.tsx",
-    "frontend/src/components/CustomerList.tsx",
-    "frontend/src/hooks/useQueries.ts",
-    "frontend/src/pages/CustomersPage.tsx",
+    "frontend/src/components/InventoryAdjustmentHistory.tsx",
+    "frontend/src/components/InvoiceForm.tsx",
+    "frontend/src/pages/InventoryPage.tsx",
+    "frontend/src/pages/SalesPage.tsx",
     "project_state.json"
   ]
 }

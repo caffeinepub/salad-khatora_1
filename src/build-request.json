@@ -1,104 +1,207 @@
 {
   "kind": "build_request",
-  "title": "Implement functional customer management page with add/edit form",
+  "title": "Fix /sales route error and implement comprehensive invoice creation system",
   "projectName": "Salad Khatora",
-  "priority": "normal",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-14",
-      "text": "Replace the placeholder CustomersPage with a functional customer management interface that displays a list of existing customers and provides an 'Add Customer' button to open a form dialog",
+      "id": "REQ-1",
+      "text": "Fix the error on the /sales route that displays 'Something went wrong!' and prevents access to the invoice creation page",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-1",
+          "msg-2"
         ],
         "quotes": [
-          "customer management coming like this not able to add customer details"
+          "if we click on new invoice showing like this",
+          "Something went wrong!"
         ]
       },
       "acceptanceCriteria": [
-        "CustomersPage displays a grid or table of existing customers",
-        "An 'Add Customer' button is visible and opens a form dialog",
-        "The page follows the same layout pattern as InventoryPage and MenuPage"
+        "The /sales route loads without errors",
+        "Users can access the invoice creation interface",
+        "No 'Something went wrong!' error is displayed"
       ]
     },
     {
-      "id": "REQ-15",
-      "text": "Create a CustomerForm component with fields for name, mobile number, email, reference source, preferences, and address, using react-hook-form for validation and state management",
+      "id": "REQ-2",
+      "text": "Implement customer management in the invoice form with a dropdown to select from pre-registered customers stored in the backend customer database",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-3",
+          "msg-4"
+        ],
+        "quotes": [
+          "should be from pre-registered in system"
         ]
       },
       "acceptanceCriteria": [
-        "Form includes all required fields: name, mobile number, email, reference source, preferences, address",
-        "Form validates mobile number format and email format",
-        "Form uses the same styling and component patterns as IngredientForm and RecipeForm",
-        "Form submits customer data to backend via mutation"
+        "Invoice form displays a dropdown of all pre-registered customers",
+        "Customer dropdown shows customer name and mobile number",
+        "Selected customer's information is linked to the invoice"
       ]
     },
     {
-      "id": "REQ-16",
-      "text": "Add backend CRUD operations for customer management including addCustomer, updateCustomer, deleteCustomer, and getCustomers functions in the main actor",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Customer type includes fields for id, name, mobile, email, referenceSource, preferences, address",
-        "addCustomer function creates a new customer and returns the customer with generated ID",
-        "updateCustomer function modifies an existing customer by ID",
-        "getCustomers function returns an array of all customers",
-        "All customer operations are session-protected like ingredient and recipe operations"
-      ]
-    },
-    {
-      "id": "REQ-17",
-      "text": "Create a CustomerList component that displays customer cards in a grid layout showing name, mobile, email, and action buttons for editing",
+      "id": "REQ-3",
+      "text": "Add the ability to enter a new customer name directly in the invoice form when creating an invoice, even if the customer is not pre-registered",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-3",
+          "msg-4"
+        ],
+        "quotes": [
+          "able to enter a new customer name directly when creating the invoice"
         ]
       },
       "acceptanceCriteria": [
-        "CustomerList fetches and displays all customers using React Query",
-        "Each customer card shows name, mobile, email prominently",
-        "Edit button opens the CustomerForm dialog with pre-filled data",
-        "Component follows the same pattern as IngredientList and RecipeList"
+        "Invoice form includes an option to add a new customer inline",
+        "User can input customer name without pre-registration",
+        "New customer entry is validated before invoice creation"
       ]
     },
     {
-      "id": "REQ-18",
-      "text": "Add React Query hooks for customer data fetching and mutations (useCustomers, useAddCustomer, useUpdateCustomer) in useQueries.ts",
+      "id": "REQ-4",
+      "text": "Display all available recipes in the invoice form with a search and filter interface to quickly find items",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-3",
+          "msg-5"
+        ],
+        "quotes": [
+          "able to see available recipes from and also should have search/filter interface"
         ]
       },
       "acceptanceCriteria": [
-        "useCustomers hook fetches customer list from backend",
-        "useAddCustomer mutation creates a new customer and invalidates customer queries",
-        "useUpdateCustomer mutation updates existing customer and invalidates queries",
-        "Hooks follow the same pattern as existing ingredient and recipe hooks"
+        "All recipes are displayed in the item selection interface",
+        "Search functionality filters recipes by name",
+        "Filter interface allows quick item lookup"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Show recipe prices alongside recipe names in the invoice item selection interface",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-3",
+          "msg-5"
+        ],
+        "quotes": [
+          "Should it display the recipe price alongside the name?",
+          "capture all information on invoice"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Each recipe displays its price in the selection interface",
+        "Prices are clearly visible next to recipe names",
+        "Price formatting is consistent across all recipes"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Allow adding multiple recipe items with quantities to a single invoice",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2",
+          "msg-4"
+        ],
+        "quotes": [
+          "allow creating invoices for multiple items at once"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Users can add multiple line items to one invoice",
+        "Each line item includes a recipe and quantity",
+        "Users can add, edit, and remove line items before saving",
+        "Invoice displays all added items with their quantities"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Capture comprehensive invoice details including customer information, items with quantities, pricing, invoice date, payment method, notes, and tax calculations",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-3",
+          "msg-5"
+        ],
+        "quotes": [
+          "capture all information on invoice",
+          "invoice date, customer contact info, payment method, notes, tax calculations"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Invoice form captures customer information",
+        "Invoice form captures all line items with quantities and prices",
+        "Invoice date is recorded (defaults to current date)",
+        "Payment method dropdown is available (cash, card, UPI, etc.)",
+        "Notes field allows additional information entry",
+        "Tax calculations are included in the invoice total",
+        "All captured data is displayed in invoice details view"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Automatically deduct ingredient quantities from inventory based on the recipes and quantities in the invoice when the invoice is saved",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2",
+          "msg-4"
+        ],
+        "quotes": [
+          "When an invoice is created, should it automatically deduct ingredients from inventory based on the recipe"
+        ]
+      },
+      "acceptanceCriteria": [
+        "When an invoice is saved, the backend calculates ingredient requirements based on recipes and quantities",
+        "Ingredient quantities in inventory are automatically reduced",
+        "If insufficient inventory exists, display an error and prevent invoice creation",
+        "Inventory adjustments are recorded with reference to the invoice ID",
+        "Users can view inventory deduction history linked to invoices"
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Calculate and display the invoice subtotal, discount, tax, and total amount in real-time as items are added",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-5"
+        ],
+        "quotes": [
+          "capture all information on invoice",
+          "tax calculations"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Subtotal updates automatically as items are added or quantities change",
+        "Discount field allows percentage or fixed amount entry",
+        "Tax percentage is applied to calculate tax amount",
+        "Total amount reflects subtotal minus discount plus tax",
+        "All calculations are displayed clearly in the invoice form"
       ]
     }
   ],
   "constraints": [
-    "Do not modify the backend session management or authentication logic",
-    "Follow the existing form component patterns from IngredientForm and RecipeForm",
-    "Use the same UI components and styling approach as other management pages",
-    "Maintain consistency with the white and green color scheme"
+    "Use existing backend actor methods for fetching customers, recipes, and ingredients",
+    "Maintain the single-actor architecture in backend/main.mo",
+    "Do not modify read-only frontend paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui",
+    "Use existing InvoiceForm.tsx component patterns and react-hook-form for form management",
+    "Ensure inventory deduction logic respects existing ingredient unit conversions (grams/kilograms)"
   ],
   "nonGoals": [
-    "Customer search or filtering functionality",
-    "Customer deletion or archiving",
-    "Linking customers to sales or subscriptions",
-    "Customer analytics or reporting"
+    "Modifying existing invoice history or analytics features",
+    "Adding customer authentication or login for invoice creation",
+    "Implementing invoice editing or deletion functionality",
+    "Adding PDF export or printing features for invoices",
+    "Creating a separate customer registration page (inline addition is sufficient)",
+    "Implementing partial inventory deduction or reservation systems"
   ],
   "imageRequirements": {
     "required": [],

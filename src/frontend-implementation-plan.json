@@ -1,72 +1,168 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Implement functional customer management page with add/edit form",
+  "title": "Fix /sales route error and implement comprehensive invoice creation system",
   "requirements": [
     {
-      "id": "REQ-14",
-      "summary": "Replace the placeholder CustomersPage with a functional customer management interface that displays a list of existing customers and provides an 'Add Customer' button to open a form dialog",
+      "id": "REQ-1",
+      "summary": "Fix the error on the /sales route preventing access to invoice creation",
       "acceptanceCriteria": [
-        "CustomersPage displays a grid or table of existing customers",
-        "An 'Add Customer' button is visible and opens a form dialog",
-        "The page follows the same layout pattern as InventoryPage and MenuPage"
+        "The /sales route loads without errors",
+        "Users can access the invoice creation interface",
+        "No 'Something went wrong!' error is displayed"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/CustomersPage.tsx",
+          "path": "frontend/src/pages/SalesPage.tsx",
           "operation": "modify",
-          "description": "Replace placeholder content with a functional customer management page structure. Add page header with 'Customer Management' title and 'Add Customer' button. Include CustomerList component to display existing customers. Add Dialog component to show CustomerForm when adding or editing customers. Follow the same layout pattern as InventoryPage with stat cards showing total customers and active customers count. Use the same green color scheme and styling conventions."
+          "description": "Debug and fix the error causing 'Something went wrong!' display on the /sales route. Check for null/undefined values in data fetching, ensure all required queries have proper loading and error states, add error boundary handling, and verify that all dependencies (customers, recipes, invoices) are loaded before rendering child components. Add fallback UI for loading states."
         }
       ]
     },
     {
-      "id": "REQ-15",
-      "summary": "Create a CustomerForm component with fields for name, mobile number, email, reference source, preferences, and address, using react-hook-form for validation and state management",
+      "id": "REQ-2",
+      "summary": "Implement customer dropdown in invoice form with pre-registered customers",
       "acceptanceCriteria": [
-        "Form includes all required fields: name, mobile number, email, reference source, preferences, address",
-        "Form validates mobile number format and email format",
-        "Form uses the same styling and component patterns as IngredientForm and RecipeForm",
-        "Form submits customer data to backend via mutation"
+        "Invoice form displays a dropdown of all pre-registered customers",
+        "Customer dropdown shows customer name and mobile number",
+        "Selected customer's information is linked to the invoice"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/CustomerForm.tsx",
-          "operation": "create",
-          "description": "Create a form component for adding and editing customers using react-hook-form. Include form fields for name (Input), mobile number (Input with phone validation pattern), email (Input with email type), reference source (Select or Input), preferences (Textarea), and address (Textarea). Map form data to CustomerInput type where contactInfo contains mobile and email, and preferences are included in the address or contactInfo field as per backend interface. Use useAddCustomer and useUpdateCustomer mutations from useQueries. Include form validation for required fields, mobile number format (10 digits), and email format. Add submit and cancel buttons. Follow the same styling and structure as IngredientForm and RecipeForm with Card, CardHeader, CardTitle, CardContent components."
-        }
-      ]
-    },
-    {
-      "id": "REQ-17",
-      "summary": "Create a CustomerList component that displays customer cards in a grid layout showing name, mobile, email, and action buttons for editing",
-      "acceptanceCriteria": [
-        "CustomerList fetches and displays all customers using React Query",
-        "Each customer card shows name, mobile, email prominently",
-        "Edit button opens the CustomerForm dialog with pre-filled data",
-        "Component follows the same pattern as IngredientList and RecipeList"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/CustomerList.tsx",
-          "operation": "create",
-          "description": "Create a component that fetches customers using useCustomers hook and displays them in a grid layout with responsive columns. Render each customer as a Card showing name as title, contactInfo (mobile and email) in the content area, and an Edit button. Extract mobile and email from contactInfo field for display. Add Badge to show active status. Include edit handler that opens CustomerForm dialog with selected customer data pre-filled. Follow the same grid layout pattern as IngredientList and RecipeList using CSS Grid with gap-4 and responsive column counts."
-        }
-      ]
-    },
-    {
-      "id": "REQ-18",
-      "summary": "Add React Query hooks for customer data fetching and mutations (useCustomers, useAddCustomer, useUpdateCustomer) in useQueries.ts",
-      "acceptanceCriteria": [
-        "useCustomers hook fetches customer list from backend",
-        "useAddCustomer mutation creates a new customer and invalidates customer queries",
-        "useUpdateCustomer mutation updates existing customer and invalidates queries",
-        "Hooks follow the same pattern as existing ingredient and recipe hooks"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
+          "path": "frontend/src/components/InvoiceForm.tsx",
           "operation": "modify",
-          "description": "Add three React Query hooks for customer management. Create useCustomers hook using useQuery that calls actor.getCustomers() with queryKey ['customers']. Create useAddCustomer mutation hook using useMutation that calls actor.addCustomer(sessionId, customerData) and invalidates ['customers'] query on success. Create useUpdateCustomer mutation hook using useMutation that calls actor.updateCustomer(sessionId, customerId, updatedData) and invalidates ['customers'] query on success. Ensure all mutations require sessionId from AuthContext. Follow the same pattern as useIngredients, useAddIngredient, and useUpdateIngredient hooks with proper error handling and type safety using Customer and CustomerInput types from backend.d.ts."
+          "description": "Enhance the customer selection section to display a searchable dropdown (using shadcn/ui Select or Combobox component) populated with pre-registered customers from the getCustomers query. Display customer name and contact info (mobile number) in each dropdown option. Update form state to store the selected customerId. Ensure the dropdown is accessible and filterable by name or contact info."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Add inline customer creation capability in invoice form",
+      "acceptanceCriteria": [
+        "Invoice form includes an option to add a new customer inline",
+        "User can input customer name without pre-registration",
+        "New customer entry is validated before invoice creation"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/InvoiceForm.tsx",
+          "operation": "modify",
+          "description": "Add a 'Create New Customer' option in the customer dropdown that opens an inline form or dialog. Include fields for customer name, contact info (mobile), and address. Validate the new customer data (name and mobile are required). On submission, call the addCustomer backend method to create the customer, then automatically select the newly created customer in the invoice form. Handle success and error states with appropriate user feedback."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Display all recipes with search and filter interface in invoice form",
+      "acceptanceCriteria": [
+        "All recipes are displayed in the item selection interface",
+        "Search functionality filters recipes by name",
+        "Filter interface allows quick item lookup"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/InvoiceForm.tsx",
+          "operation": "modify",
+          "description": "Enhance the recipe/item selection interface to display all available recipes from getAllRecipes query. Add a search input field that filters recipes by name in real-time. Implement a filterable list or grid view using shadcn/ui components (Command, Combobox, or Select with search). Show recipe name and bowl size for each option. Ensure the interface is responsive and user-friendly for quick item selection."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Display recipe prices alongside names in item selection",
+      "acceptanceCriteria": [
+        "Each recipe displays its price in the selection interface",
+        "Prices are clearly visible next to recipe names",
+        "Price formatting is consistent across all recipes"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/InvoiceForm.tsx",
+          "operation": "modify",
+          "description": "Update the recipe selection interface to display the unitPrice for each recipe alongside the recipe name and bowl size. Format prices consistently using currency formatting (e.g., ₹XX.XX). Ensure the price is visible in both the dropdown/selection list and in the added line items table. The price should auto-populate the unitPrice field when a recipe is selected."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Enable adding multiple recipe items with quantities to invoice",
+      "acceptanceCriteria": [
+        "Users can add multiple line items to one invoice",
+        "Each line item includes a recipe and quantity",
+        "Users can add, edit, and remove line items before saving",
+        "Invoice displays all added items with their quantities"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/InvoiceForm.tsx",
+          "operation": "modify",
+          "description": "Verify and enhance the existing line items functionality using react-hook-form field arrays. Ensure users can add multiple line items by selecting a recipe, entering quantity, and clicking 'Add Item'. Each line item should display recipe name, bowl size, quantity, unit price, and calculated line total. Provide edit and remove buttons for each line item. Display all line items in a table or list format. Validate that at least one line item exists before allowing invoice submission."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Capture comprehensive invoice details including customer info, items, pricing, date, payment method, notes, and tax",
+      "acceptanceCriteria": [
+        "Invoice form captures customer information",
+        "Invoice form captures all line items with quantities and prices",
+        "Invoice date is recorded (defaults to current date)",
+        "Payment method dropdown is available (cash, card, UPI, etc.)",
+        "Notes field allows additional information entry",
+        "Tax calculations are included in the invoice total",
+        "All captured data is displayed in invoice details view"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/InvoiceForm.tsx",
+          "operation": "modify",
+          "description": "Add comprehensive fields to the invoice form: invoice date field (with date picker, defaulting to current date), payment method dropdown (cash, card, UPI matching PaymentMode enum), optional notes textarea, and tax calculation fields (tax percentage input and calculated tax amount display). Ensure all fields are integrated with react-hook-form. Update the form submission to include all captured data in the InvoiceInput payload sent to createInvoice backend method. Add proper validation for required fields."
+        },
+        {
+          "path": "frontend/src/components/InvoiceDetailsDialog.tsx",
+          "operation": "modify",
+          "description": "Enhance the invoice details dialog to display all comprehensive invoice information including invoice date, customer details, all line items with quantities and prices, subtotal, discount, tax breakdown (percentage and amount), total amount, payment method, and notes. Format all data for readability. Ensure the dialog fetches complete invoice data using getInvoice backend method and related customer/recipe information."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Display appropriate messaging for inventory deduction (backend-handled)",
+      "acceptanceCriteria": [
+        "When an invoice is saved, the backend calculates ingredient requirements based on recipes and quantities",
+        "Ingredient quantities in inventory are automatically reduced",
+        "If insufficient inventory exists, display an error and prevent invoice creation",
+        "Inventory adjustments are recorded with reference to the invoice ID",
+        "Users can view inventory deduction history linked to invoices"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/InvoiceForm.tsx",
+          "operation": "modify",
+          "description": "Enhance error handling for invoice submission to display user-friendly error messages when inventory deduction fails due to insufficient stock. Parse backend error responses and show specific ingredient shortfall information to the user. Add a success message after invoice creation confirming that inventory has been automatically updated. Provide a link or reference to view inventory adjustments."
+        },
+        {
+          "path": "frontend/src/pages/InventoryPage.tsx",
+          "operation": "modify",
+          "description": "Add a section or tab to display inventory adjustment history. Use the getInventoryAdjustments backend method to fetch adjustment records. Show adjustments with timestamp, ingredient name, quantity changed, reason (sale/restock), and related invoice ID if applicable. Provide a link to view the invoice details when an adjustment is linked to an invoice (relatedInvoiceId present)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Calculate and display invoice totals in real-time",
+      "acceptanceCriteria": [
+        "Subtotal updates automatically as items are added or quantities change",
+        "Discount field allows percentage or fixed amount entry",
+        "Tax percentage is applied to calculate tax amount",
+        "Total amount reflects subtotal minus discount plus tax",
+        "All calculations are displayed clearly in the invoice form"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/InvoiceForm.tsx",
+          "operation": "modify",
+          "description": "Implement real-time calculation logic using react-hook-form's watch functionality or useEffect. Calculate subtotal by summing all line item totals (quantity × unitPrice). Add discount field with toggle for percentage or fixed amount. Calculate discounted subtotal. Add tax percentage input and calculate tax amount on the discounted subtotal. Calculate and display final total amount (subtotal - discount + tax). Display all calculation steps clearly: Subtotal, Discount, Subtotal after discount, Tax (with percentage), and Total Amount. Update calculations immediately when any line item, quantity, price, discount, or tax value changes."
         }
       ]
     }

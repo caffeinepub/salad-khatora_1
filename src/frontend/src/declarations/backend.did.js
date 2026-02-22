@@ -39,6 +39,40 @@ export const RecipeInput = IDL.Record({
   'bowlSize' : BowlSize,
   'ingredients' : IDL.Vec(RecipeIngredient),
 });
+export const SubscriptionInput = IDL.Record({
+  'paymentStatus' : IDL.Variant({
+    'cancelled' : IDL.Null,
+    'pending' : IDL.Null,
+    'paid' : IDL.Null,
+    'overdue' : IDL.Null,
+  }),
+  'endDate' : IDL.Text,
+  'customerId' : IDL.Nat,
+  'price' : IDL.Float64,
+  'planType' : IDL.Variant({
+    'weekly6days' : IDL.Null,
+    'monthly24days' : IDL.Null,
+  }),
+  'bowlSize' : BowlSize,
+  'startDate' : IDL.Text,
+});
+export const PaymentMode = IDL.Variant({
+  'upi' : IDL.Null,
+  'card' : IDL.Null,
+  'cash' : IDL.Null,
+});
+export const InvoiceInputItem = IDL.Record({
+  'recipeId' : IDL.Nat,
+  'quantity' : IDL.Nat,
+  'unitPrice' : IDL.Float64,
+});
+export const InvoiceInput = IDL.Record({
+  'invoiceDate' : IDL.Int,
+  'discount' : IDL.Float64,
+  'paymentMode' : PaymentMode,
+  'customerId' : IDL.Opt(IDL.Nat),
+  'items' : IDL.Vec(InvoiceInputItem),
+});
 export const Ingredient = IDL.Record({
   'id' : IDL.Nat,
   'lowStockThreshold' : Weight,
@@ -46,6 +80,21 @@ export const Ingredient = IDL.Record({
   'name' : IDL.Text,
   'quantity' : Weight,
   'costPricePerUnit' : IDL.Float64,
+});
+export const InvoiceItem = IDL.Record({
+  'recipeId' : IDL.Nat,
+  'quantity' : IDL.Nat,
+  'unitPrice' : IDL.Float64,
+  'totalPrice' : IDL.Float64,
+});
+export const SalesInvoice = IDL.Record({
+  'id' : IDL.Nat,
+  'invoiceDate' : IDL.Int,
+  'totalAmount' : IDL.Float64,
+  'discount' : IDL.Float64,
+  'paymentMode' : PaymentMode,
+  'customerId' : IDL.Opt(IDL.Nat),
+  'items' : IDL.Vec(InvoiceItem),
 });
 export const Recipe = IDL.Record({
   'id' : IDL.Nat,
@@ -62,6 +111,33 @@ export const Customer = IDL.Record({
   'updatedAt' : IDL.Int,
   'address' : IDL.Text,
 });
+export const Subscription = IDL.Record({
+  'id' : IDL.Nat,
+  'paymentStatus' : IDL.Variant({
+    'cancelled' : IDL.Null,
+    'pending' : IDL.Null,
+    'paid' : IDL.Null,
+    'overdue' : IDL.Null,
+  }),
+  'endDate' : IDL.Text,
+  'createdAt' : IDL.Int,
+  'isActive' : IDL.Bool,
+  'customerId' : IDL.Nat,
+  'price' : IDL.Float64,
+  'planType' : IDL.Variant({
+    'weekly6days' : IDL.Null,
+    'monthly24days' : IDL.Null,
+  }),
+  'bowlSize' : BowlSize,
+  'startDate' : IDL.Text,
+});
+export const InventoryAdjustment = IDL.Record({
+  'timestamp' : IDL.Int,
+  'relatedInvoiceId' : IDL.Opt(IDL.Nat),
+  'ingredientId' : IDL.Nat,
+  'quantityChanged' : Weight,
+  'reason' : IDL.Variant({ 'sale' : IDL.Null, 'restock' : IDL.Null }),
+});
 export const InventoryState = IDL.Record({
   'totalValue' : IDL.Float64,
   'ingredients' : IDL.Vec(Ingredient),
@@ -71,20 +147,47 @@ export const idlService = IDL.Service({
   'addCustomer' : IDL.Func([SessionId, CustomerInput], [IDL.Nat], []),
   'addIngredient' : IDL.Func([SessionId, IngredientInput], [], []),
   'addRecipe' : IDL.Func([SessionId, RecipeInput], [], []),
+  'addSubscription' : IDL.Func([SessionId, SubscriptionInput], [IDL.Nat], []),
+  'createInvoice' : IDL.Func([SessionId, InvoiceInput], [IDL.Nat], []),
   'createSession' : IDL.Func([], [SessionId], []),
   'deleteCustomer' : IDL.Func([SessionId, IDL.Nat], [], []),
+  'deleteSubscription' : IDL.Func([SessionId, IDL.Nat], [], []),
   'endSession' : IDL.Func([SessionId], [], []),
   'getAllIngredients' : IDL.Func([], [IDL.Vec(Ingredient)], ['query']),
+  'getAllInvoices' : IDL.Func([], [IDL.Vec(SalesInvoice)], ['query']),
   'getAllRecipes' : IDL.Func([], [IDL.Vec(Recipe)], ['query']),
   'getCustomers' : IDL.Func([], [IDL.Vec(Customer)], ['query']),
+  'getExpiringSubscriptions' : IDL.Func([], [IDL.Vec(Subscription)], ['query']),
   'getIngredient' : IDL.Func([IDL.Nat], [IDL.Opt(Ingredient)], ['query']),
+  'getInventoryAdjustments' : IDL.Func(
+      [IDL.Nat],
+      [IDL.Vec(InventoryAdjustment)],
+      ['query'],
+    ),
   'getInventoryState' : IDL.Func([], [InventoryState], ['query']),
+  'getInvoice' : IDL.Func([IDL.Nat], [IDL.Opt(SalesInvoice)], ['query']),
+  'getInvoicesByCustomer' : IDL.Func(
+      [IDL.Nat],
+      [IDL.Vec(SalesInvoice)],
+      ['query'],
+    ),
   'getLowStockIngredients' : IDL.Func([], [IDL.Vec(Ingredient)], ['query']),
   'getRecipe' : IDL.Func([IDL.Nat], [IDL.Opt(Recipe)], ['query']),
+  'getSubscriptions' : IDL.Func(
+      [IDL.Opt(IDL.Nat)],
+      [IDL.Vec(Subscription)],
+      ['query'],
+    ),
   'isSessionActive' : IDL.Func([SessionId], [IDL.Bool], ['query']),
+  'restockIngredient' : IDL.Func([SessionId, IDL.Nat, Weight], [], []),
   'updateCustomer' : IDL.Func([SessionId, IDL.Nat, CustomerInput], [], []),
   'updateIngredient' : IDL.Func([SessionId, IDL.Nat, IngredientInput], [], []),
   'updateRecipe' : IDL.Func([SessionId, IDL.Nat, RecipeInput], [], []),
+  'updateSubscription' : IDL.Func(
+      [SessionId, IDL.Nat, SubscriptionInput],
+      [],
+      [],
+    ),
 });
 
 export const idlInitArgs = [];
@@ -121,6 +224,40 @@ export const idlFactory = ({ IDL }) => {
     'bowlSize' : BowlSize,
     'ingredients' : IDL.Vec(RecipeIngredient),
   });
+  const SubscriptionInput = IDL.Record({
+    'paymentStatus' : IDL.Variant({
+      'cancelled' : IDL.Null,
+      'pending' : IDL.Null,
+      'paid' : IDL.Null,
+      'overdue' : IDL.Null,
+    }),
+    'endDate' : IDL.Text,
+    'customerId' : IDL.Nat,
+    'price' : IDL.Float64,
+    'planType' : IDL.Variant({
+      'weekly6days' : IDL.Null,
+      'monthly24days' : IDL.Null,
+    }),
+    'bowlSize' : BowlSize,
+    'startDate' : IDL.Text,
+  });
+  const PaymentMode = IDL.Variant({
+    'upi' : IDL.Null,
+    'card' : IDL.Null,
+    'cash' : IDL.Null,
+  });
+  const InvoiceInputItem = IDL.Record({
+    'recipeId' : IDL.Nat,
+    'quantity' : IDL.Nat,
+    'unitPrice' : IDL.Float64,
+  });
+  const InvoiceInput = IDL.Record({
+    'invoiceDate' : IDL.Int,
+    'discount' : IDL.Float64,
+    'paymentMode' : PaymentMode,
+    'customerId' : IDL.Opt(IDL.Nat),
+    'items' : IDL.Vec(InvoiceInputItem),
+  });
   const Ingredient = IDL.Record({
     'id' : IDL.Nat,
     'lowStockThreshold' : Weight,
@@ -128,6 +265,21 @@ export const idlFactory = ({ IDL }) => {
     'name' : IDL.Text,
     'quantity' : Weight,
     'costPricePerUnit' : IDL.Float64,
+  });
+  const InvoiceItem = IDL.Record({
+    'recipeId' : IDL.Nat,
+    'quantity' : IDL.Nat,
+    'unitPrice' : IDL.Float64,
+    'totalPrice' : IDL.Float64,
+  });
+  const SalesInvoice = IDL.Record({
+    'id' : IDL.Nat,
+    'invoiceDate' : IDL.Int,
+    'totalAmount' : IDL.Float64,
+    'discount' : IDL.Float64,
+    'paymentMode' : PaymentMode,
+    'customerId' : IDL.Opt(IDL.Nat),
+    'items' : IDL.Vec(InvoiceItem),
   });
   const Recipe = IDL.Record({
     'id' : IDL.Nat,
@@ -144,6 +296,33 @@ export const idlFactory = ({ IDL }) => {
     'updatedAt' : IDL.Int,
     'address' : IDL.Text,
   });
+  const Subscription = IDL.Record({
+    'id' : IDL.Nat,
+    'paymentStatus' : IDL.Variant({
+      'cancelled' : IDL.Null,
+      'pending' : IDL.Null,
+      'paid' : IDL.Null,
+      'overdue' : IDL.Null,
+    }),
+    'endDate' : IDL.Text,
+    'createdAt' : IDL.Int,
+    'isActive' : IDL.Bool,
+    'customerId' : IDL.Nat,
+    'price' : IDL.Float64,
+    'planType' : IDL.Variant({
+      'weekly6days' : IDL.Null,
+      'monthly24days' : IDL.Null,
+    }),
+    'bowlSize' : BowlSize,
+    'startDate' : IDL.Text,
+  });
+  const InventoryAdjustment = IDL.Record({
+    'timestamp' : IDL.Int,
+    'relatedInvoiceId' : IDL.Opt(IDL.Nat),
+    'ingredientId' : IDL.Nat,
+    'quantityChanged' : Weight,
+    'reason' : IDL.Variant({ 'sale' : IDL.Null, 'restock' : IDL.Null }),
+  });
   const InventoryState = IDL.Record({
     'totalValue' : IDL.Float64,
     'ingredients' : IDL.Vec(Ingredient),
@@ -153,17 +332,43 @@ export const idlFactory = ({ IDL }) => {
     'addCustomer' : IDL.Func([SessionId, CustomerInput], [IDL.Nat], []),
     'addIngredient' : IDL.Func([SessionId, IngredientInput], [], []),
     'addRecipe' : IDL.Func([SessionId, RecipeInput], [], []),
+    'addSubscription' : IDL.Func([SessionId, SubscriptionInput], [IDL.Nat], []),
+    'createInvoice' : IDL.Func([SessionId, InvoiceInput], [IDL.Nat], []),
     'createSession' : IDL.Func([], [SessionId], []),
     'deleteCustomer' : IDL.Func([SessionId, IDL.Nat], [], []),
+    'deleteSubscription' : IDL.Func([SessionId, IDL.Nat], [], []),
     'endSession' : IDL.Func([SessionId], [], []),
     'getAllIngredients' : IDL.Func([], [IDL.Vec(Ingredient)], ['query']),
+    'getAllInvoices' : IDL.Func([], [IDL.Vec(SalesInvoice)], ['query']),
     'getAllRecipes' : IDL.Func([], [IDL.Vec(Recipe)], ['query']),
     'getCustomers' : IDL.Func([], [IDL.Vec(Customer)], ['query']),
+    'getExpiringSubscriptions' : IDL.Func(
+        [],
+        [IDL.Vec(Subscription)],
+        ['query'],
+      ),
     'getIngredient' : IDL.Func([IDL.Nat], [IDL.Opt(Ingredient)], ['query']),
+    'getInventoryAdjustments' : IDL.Func(
+        [IDL.Nat],
+        [IDL.Vec(InventoryAdjustment)],
+        ['query'],
+      ),
     'getInventoryState' : IDL.Func([], [InventoryState], ['query']),
+    'getInvoice' : IDL.Func([IDL.Nat], [IDL.Opt(SalesInvoice)], ['query']),
+    'getInvoicesByCustomer' : IDL.Func(
+        [IDL.Nat],
+        [IDL.Vec(SalesInvoice)],
+        ['query'],
+      ),
     'getLowStockIngredients' : IDL.Func([], [IDL.Vec(Ingredient)], ['query']),
     'getRecipe' : IDL.Func([IDL.Nat], [IDL.Opt(Recipe)], ['query']),
+    'getSubscriptions' : IDL.Func(
+        [IDL.Opt(IDL.Nat)],
+        [IDL.Vec(Subscription)],
+        ['query'],
+      ),
     'isSessionActive' : IDL.Func([SessionId], [IDL.Bool], ['query']),
+    'restockIngredient' : IDL.Func([SessionId, IDL.Nat, Weight], [], []),
     'updateCustomer' : IDL.Func([SessionId, IDL.Nat, CustomerInput], [], []),
     'updateIngredient' : IDL.Func(
         [SessionId, IDL.Nat, IngredientInput],
@@ -171,6 +376,11 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'updateRecipe' : IDL.Func([SessionId, IDL.Nat, RecipeInput], [], []),
+    'updateSubscription' : IDL.Func(
+        [SessionId, IDL.Nat, SubscriptionInput],
+        [],
+        [],
+      ),
   });
 };
 
