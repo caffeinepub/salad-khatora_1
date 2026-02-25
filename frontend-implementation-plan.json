@@ -1,0 +1,70 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Fix data persistence and build meal delivery subscription management app - Frontend",
+  "requirements": [
+    {
+      "id": "REQ-8",
+      "summary": "Fix IngredientForm to properly call backend mutations and invalidate query cache",
+      "acceptanceCriteria": [
+        "Filling out IngredientForm and clicking Save persists the ingredient",
+        "After saving, the ingredient immediately appears in the IngredientList without a manual refresh",
+        "Editing an existing ingredient updates it in the list"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/IngredientForm.tsx",
+          "operation": "modify",
+          "description": "Ensure the form's onSubmit handler correctly invokes the createIngredient or updateIngredient mutation from useQueries.ts. On successful mutation, call queryClient.invalidateQueries(['ingredients']) to refresh the ingredient list. Verify the mutation hooks wire to the backend actor's createIngredient and updateIngredient methods. Add error handling with user-facing toast notifications for mutation failures."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Review and ensure useCreateIngredient and useUpdateIngredient mutation hooks correctly call actor.createIngredient(input) and actor.updateIngredient(id, input) respectively. Ensure both mutations include onSuccess callbacks that invalidate the 'ingredients' query key. Confirm the mutations return promises that resolve after backend persistence completes."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Ensure all React Query hooks wire correctly to stable backend actor methods for consistent data across tabs",
+      "acceptanceCriteria": [
+        "Navigating between tabs does not lose previously loaded data",
+        "Mutations (create/update/delete) trigger query invalidation so all tabs reflect current state",
+        "No stale or empty states appear on tab switch after data has been saved"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Review all query hooks (useGetIngredients, useGetRecipes, useGetCustomers, useGetSubscriptions, useGetInvoices, useGetPlans) to ensure they correctly call the corresponding backend actor methods (getIngredients, getRecipes, getCustomers, getSubscriptions, getInvoices, getPlans). Verify all mutation hooks (create/update/delete for each entity) include onSuccess callbacks that invalidate the correct query keys so dependent queries refetch. Ensure enabled flags prevent premature fetching when actor is unavailable. Add consistent error handling for all queries and mutations."
+        },
+        {
+          "path": "frontend/src/hooks/useActor.ts",
+          "operation": "modify",
+          "description": "Verify the actor initialization logic correctly creates an authenticated or anonymous actor based on identity state. Ensure the actor is stable across re-renders and only recreates when identity changes. Confirm queryClient.invalidateQueries() is called when the actor reinitializes to force dependent queries to refetch with the new actor instance."
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Preserve all existing page tabs and their routing structure",
+      "acceptanceCriteria": [
+        "All existing navigation links are present and functional",
+        "Each tab routes to its corresponding page component",
+        "No existing tabs are removed or renamed"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/Layout.tsx",
+          "operation": "modify",
+          "description": "Verify that all navigation links (Dashboard, Subscriptions, Customers, Inventory, Menu, Sales, Plans) are present and correctly route to their corresponding pages. Ensure no links are removed or renamed. Confirm the mobile drawer menu includes all tabs. Do not add new tabs or modify the existing navigation structure."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Verify that all existing routes (/, /subscriptions, /customers, /inventory, /menu, /sales, /plans) are registered in the router and map to the correct page components (DashboardPage, SubscriptionsPage, CustomersPage, InventoryPage, MenuPage, SalesPage, PlansPage). Ensure no routes are removed or renamed. Confirm the router configuration remains intact."
+        }
+      ]
+    }
+  ]
+}

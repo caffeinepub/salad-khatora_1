@@ -1,0 +1,64 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-fix-the-ingredientform-component-so-that-submitting-the-form-calls-the-createingredient-or-updateingredient-backend-mutation-and-upon-success-invalidates-the-ingredients-query-cache-causing-ingredientlist-to-re-render-with-the-latest-data",
+      "featureTitle": "Fix the IngredientForm component so that submitting the form calls the createIngredient or updateIngredient backend mutation and upon success invalidates the ingredients query cache, causing IngredientList to re-render with the latest data.",
+      "files": [
+        "frontend/src/components/IngredientForm.tsx",
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-8"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-ensure-all-react-query-hooks-in-usequeries-ts-correctly-wire-to-the-stable-backend-actor-methods-for-ingredients-recipes-customers-subscriptions-invoices-and-plans-so-data-fetched-from-the-canister-is-displayed-consistently-across-all-app-tabs-inventory-subscriptions-customers-menu-sales-plans",
+      "featureTitle": "Ensure all React Query hooks in useQueries.ts correctly wire to the stable backend actor methods for ingredients, recipes, customers, subscriptions, invoices, and plans — so data fetched from the canister is displayed consistently across all app tabs (Inventory, Subscriptions, Customers, Menu, Sales, Plans).",
+      "files": [
+        "frontend/src/hooks/useQueries.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-9"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-preserve-all-existing-page-tabs-and-their-routing-dashboard-subscriptions-customers-inventory-menu-sales-and-plans-keeping-the-current-navigation-structure-in-layout-tsx-intact",
+      "featureTitle": "Preserve all existing page tabs and their routing: Dashboard, Subscriptions, Customers, Inventory, Menu, Sales, and Plans — keeping the current navigation structure in Layout.tsx intact.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/Layout.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-10"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

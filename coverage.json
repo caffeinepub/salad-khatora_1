@@ -1,0 +1,157 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-25T17:40:01.072Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 11,
+    "implemented": 3,
+    "items": [
+      {
+        "id": "REQ-1",
+        "summary": "Ensure all backend stable variables use `stable` keyword for Ingredients, Recipes, Customers, Subscriptions, Invoices, and Plans so data persists across canister upgrades and page refreshes.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-10",
+        "summary": "Preserve all existing page tabs and their routing: Dashboard, Subscriptions, Customers, Inventory, Menu, Sales, and Plans — keeping the current navigation structure in Layout.tsx intact.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/Layout.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/Layout.tsx",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-11",
+        "summary": "Generate a migration.mo that upgrades any existing subscription day records, preserving the tri-state status variant (#delivered, #missed, #pending) and migrating any legacy boolean `delivered` fields during canister upgrade.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Implement full CRUD backend endpoints for Ingredients: createIngredient, getIngredients, updateIngredient, deleteIngredient — ensuring each operation correctly reads from and writes to stable storage.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Implement full CRUD backend endpoints for Customers: createCustomer, getCustomers, updateCustomer, deleteCustomer — with stable storage.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Implement full CRUD backend endpoints for Subscriptions: createSubscription, getSubscriptions, updateSubscription, deleteSubscription — storing name, subscription start date, end date, and delivery days of the week per subscriber in stable storage.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Implement full CRUD backend endpoints for Plans: createPlan, getPlans, updatePlan, deletePlan — with stable storage.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-6",
+        "summary": "Implement full CRUD backend endpoints for Recipes: createRecipe, getRecipes, updateRecipe, deleteRecipe — with stable storage.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-7",
+        "summary": "Implement full CRUD backend endpoints for Invoices: createInvoice, getInvoices, getInvoicesByCustomer — with stable storage.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-8",
+        "summary": "Fix the IngredientForm component so that submitting the form calls the createIngredient or updateIngredient backend mutation and upon success invalidates the ingredients query cache, causing IngredientList to re-render with the latest data.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/IngredientForm.tsx",
+          "frontend/src/hooks/useQueries.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/IngredientForm.tsx",
+          "frontend/src/hooks/useQueries.ts"
+        ]
+      },
+      {
+        "id": "REQ-9",
+        "summary": "Ensure all React Query hooks in useQueries.ts correctly wire to the stable backend actor methods for ingredients, recipes, customers, subscriptions, invoices, and plans — so data fetched from the canister is displayed consistently across all app tabs (Inventory, Subscriptions, Customers, Menu, Sales, Plans).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/hooks/useActor.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useQueries.ts"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/App.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/CustomerDetailsDialog.tsx",
+    "frontend/src/components/CustomerForm.tsx",
+    "frontend/src/components/CustomerList.tsx",
+    "frontend/src/components/DeliveryDayList.tsx",
+    "frontend/src/components/IngredientForm.tsx",
+    "frontend/src/components/IngredientList.tsx",
+    "frontend/src/components/InventoryAdjustmentHistory.tsx",
+    "frontend/src/components/InvoiceDetailsDialog.tsx",
+    "frontend/src/components/InvoiceForm.tsx",
+    "frontend/src/components/InvoiceList.tsx",
+    "frontend/src/components/Layout.tsx",
+    "frontend/src/components/NotificationPanel.tsx",
+    "frontend/src/components/PlanForm.tsx",
+    "frontend/src/components/PlanList.tsx",
+    "frontend/src/components/RecipeForm.tsx",
+    "frontend/src/components/RecipeList.tsx",
+    "frontend/src/components/SubscriptionForm.tsx",
+    "frontend/src/components/SubscriptionList.tsx",
+    "frontend/src/contexts/AuthContext.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useNotifications.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/hooks/useSalesAnalytics.ts",
+    "frontend/src/pages/CustomersPage.tsx",
+    "frontend/src/pages/DashboardPage.tsx",
+    "frontend/src/pages/InventoryPage.tsx",
+    "frontend/src/pages/LoginPage.tsx",
+    "frontend/src/pages/MenuPage.tsx",
+    "frontend/src/pages/PlansPage.tsx",
+    "frontend/src/pages/SalesPage.tsx",
+    "frontend/src/pages/SubscriptionsPage.tsx",
+    "frontend/src/types.ts",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

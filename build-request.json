@@ -1,0 +1,209 @@
+{
+  "kind": "build_request",
+  "title": "Fix data persistence and build meal delivery subscription management app",
+  "projectName": "Salad Khatora",
+  "priority": "high",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Ensure all backend stable variables use `stable` keyword for Ingredients, Recipes, Customers, Subscriptions, Invoices, and Plans so data persists across canister upgrades and page refreshes.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-4",
+          "msg-10"
+        ],
+        "quotes": [
+          "fails to save ingredients",
+          "Stable storage on the Internet Computer so all records persist across sessions, refreshes, and tab navigation"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All data collections (ingredients, recipes, customers, subscriptions, invoices, plans) are declared as stable variables in main.mo",
+        "After a page refresh, all previously saved records are still retrievable",
+        "Adding an ingredient and refreshing the page retains the ingredient in the list"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Implement full CRUD backend endpoints for Ingredients: createIngredient, getIngredients, updateIngredient, deleteIngredient — ensuring each operation correctly reads from and writes to stable storage.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "fails to save ingredients"
+        ]
+      },
+      "acceptanceCriteria": [
+        "createIngredient persists the ingredient and returns the new record",
+        "getIngredients returns all stored ingredients after canister restart",
+        "updateIngredient modifies the correct record by ID",
+        "deleteIngredient removes the record permanently"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Implement full CRUD backend endpoints for Customers: createCustomer, getCustomers, updateCustomer, deleteCustomer — with stable storage.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-8"
+        ],
+        "quotes": [
+          "name, subscription start/end date, delivery days of the week"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All customer records persist across page refreshes",
+        "Customer list returns all saved customers on getCustomers call"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Implement full CRUD backend endpoints for Subscriptions: createSubscription, getSubscriptions, updateSubscription, deleteSubscription — storing name, subscription start date, end date, and delivery days of the week per subscriber in stable storage.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-8"
+        ],
+        "quotes": [
+          "name, subscription start/end date, delivery days of the week"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A new subscription with name, start date, end date, and delivery days can be created and retrieved",
+        "Subscription records survive page refresh and tab switching",
+        "Delivery days of the week are stored as an array of day names or indices"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Implement full CRUD backend endpoints for Plans: createPlan, getPlans, updatePlan, deletePlan — with stable storage.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-8"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Plans persist across sessions",
+        "getPlans returns all saved plans"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Implement full CRUD backend endpoints for Recipes: createRecipe, getRecipes, updateRecipe, deleteRecipe — with stable storage.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-8"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Recipes persist across sessions",
+        "getRecipes returns all saved recipes"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Implement full CRUD backend endpoints for Invoices: createInvoice, getInvoices, getInvoicesByCustomer — with stable storage.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-8"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Invoices persist across sessions",
+        "getInvoices returns all saved invoices"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Fix the IngredientForm component so that submitting the form calls the createIngredient or updateIngredient backend mutation and upon success invalidates the ingredients query cache, causing IngredientList to re-render with the latest data.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "fails to save ingredients"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Filling out IngredientForm and clicking Save persists the ingredient",
+        "After saving, the ingredient immediately appears in the IngredientList without a manual refresh",
+        "Editing an existing ingredient updates it in the list"
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Ensure all React Query hooks in useQueries.ts correctly wire to the stable backend actor methods for ingredients, recipes, customers, subscriptions, invoices, and plans — so data fetched from the canister is displayed consistently across all app tabs (Inventory, Subscriptions, Customers, Menu, Sales, Plans).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4",
+          "msg-10"
+        ],
+        "quotes": [
+          "fails to save ingredients",
+          "Saved details (records, ingredients) not showing across all tabs"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Navigating between tabs does not lose previously loaded data",
+        "Mutations (create/update/delete) trigger query invalidation so all tabs reflect current state",
+        "No stale or empty states appear on tab switch after data has been saved"
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "text": "Preserve all existing page tabs and their routing: Dashboard, Subscriptions, Customers, Inventory, Menu, Sales, and Plans — keeping the current navigation structure in Layout.tsx intact.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-8"
+        ],
+        "quotes": [
+          "keep the current tabs as it is"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All existing navigation links are present and functional",
+        "Each tab routes to its corresponding page component",
+        "No existing tabs are removed or renamed"
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "text": "Generate a migration.mo that upgrades any existing subscription day records, preserving the tri-state status variant (#delivered, #missed, #pending) and migrating any legacy boolean `delivered` fields during canister upgrade.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-8"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Canister upgrade does not lose existing subscription delivery day records",
+        "Legacy boolean `delivered` fields are converted to the tri-state status variant"
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not remove or rename any existing navigation tabs",
+    "All Motoko logic must remain in backend/main.mo as a single actor",
+    "Do not edit files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui"
+  ],
+  "nonGoals": [
+    "Adding new tabs or pages beyond what currently exists",
+    "Changing the visual theme or design system",
+    "Real-time updates via WebSockets",
+    "External database integration"
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

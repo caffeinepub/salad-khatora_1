@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "Meal delivery subscription management app with subscriber management (name, subscription start/end dates, delivery days of the week), ingredients tracking, and stable storage on the Internet Computer for data persistence across sessions and tabs.",
+  "architectural_notes": [
+    "Use Internet Computer stable storage for all data persistence to survive sessions and page refreshes"
+  ],
+  "known_issues": [
+    "Repeated build failures — AI unable to complete full app build; multiple retries attempted",
+    "Saved details (records, ingredients) not showing across all tabs — data persistence issue"
+  ],
+  "isFixRequest": true,
+  "existing_features": [
+    {
+      "id": "feature-fix-the-ingredientform-component-so-that-submitting-the-form-calls-the-createingredient-or-updateingredient-backend-mutation-and-upon-success-invalidates-the-ingredients-query-cache-causing-ingredientlist-to-re-render-with-the-latest-data",
+      "title": "Fix the IngredientForm component so that submitting the form calls the createIngredient or updateIngredient backend mutation and upon success invalidates the ingredients query cache, causing IngredientList to re-render with the latest data.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-all-react-query-hooks-in-usequeries-ts-correctly-wire-to-the-stable-backend-actor-methods-for-ingredients-recipes-customers-subscriptions-invoices-and-plans-so-data-fetched-from-the-canister-is-displayed-consistently-across-all-app-tabs-inventory-subscriptions-customers-menu-sales-plans",
+      "title": "Ensure all React Query hooks in useQueries.ts correctly wire to the stable backend actor methods for ingredients, recipes, customers, subscriptions, invoices, and plans — so data fetched from the canister is displayed consistently across all app tabs (Inventory, Subscriptions, Customers, Menu, Sales, Plans).",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-preserve-all-existing-page-tabs-and-their-routing-dashboard-subscriptions-customers-inventory-menu-sales-and-plans-keeping-the-current-navigation-structure-in-layout-tsx-intact",
+      "title": "Preserve all existing page tabs and their routing: Dashboard, Subscriptions, Customers, Inventory, Menu, Sales, and Plans — keeping the current navigation structure in Layout.tsx intact.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Subscriber management with name, subscription start/end dates, and delivery days of the week",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Ingredients tracking with reliable save functionality",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Stable storage on the Internet Computer so all records persist across sessions, refreshes, and tab navigation",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Ensure all backend stable variables use `stable` keyword for Ingredients, Recipes, Customers, Subscriptions, Invoices, and Plans so data persists across canister upgrades and page refreshes.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Implement full CRUD backend endpoints for Ingredients: createIngredient, getIngredients, updateIngredient, deleteIngredient — ensuring each operation correctly reads from and writes to stable storage.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Implement full CRUD backend endpoints for Customers: createCustomer, getCustomers, updateCustomer, deleteCustomer — with stable storage.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Implement full CRUD backend endpoints for Subscriptions: createSubscription, getSubscriptions, updateSubscription, deleteSubscription — storing name, subscription start date, end date, and delivery days of the week per subscriber in stable storage.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Implement full CRUD backend endpoints for Plans: createPlan, getPlans, updatePlan, deletePlan — with stable storage.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Implement full CRUD backend endpoints for Recipes: createRecipe, getRecipes, updateRecipe, deleteRecipe — with stable storage.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Implement full CRUD backend endpoints for Invoices: createInvoice, getInvoices, getInvoicesByCustomer — with stable storage.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Generate a migration.mo that upgrades any existing subscription day records, preserving the tri-state status variant (#delivered, #missed, #pending) and migrating any legacy boolean `delivered` fields during canister upgrade.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Meal Delivery Subscription Manager",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

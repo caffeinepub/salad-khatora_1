@@ -1,0 +1,88 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-25T17:40:01.068Z",
+  "summary": "The diff implements most of the requested requirements including stable variable CRUD backends, frontend form components wiring to React Query hooks, Layout navigation preservation, and a migration.mo file. However, REQ-4's specific requirement for storing delivery days of the week (as an array of day names or indices per subscriber) appears to use date-based day records rather than the requested delivery-days-of-week field. REQ-11's migration.mo does not implement the specific legacy boolean `delivered` field migration to tri-state status variant — it instead migrates inventoryAdjustments from List to Array. The backend/main.mo is truncated so stable variable declarations cannot be fully verified.",
+  "missing_requirements": [
+    {
+      "id": "REQ-4",
+      "requirement": "Subscriptions should store delivery days of the week per subscriber (as an array of day names or indices)",
+      "reason": "The SubscriptionAdvanced type in both migration.mo and main.mo uses dayRecords: [DayRecord] (date-specific records) rather than a deliveryDaysOfWeek field storing an array of day names or indices. The SubscriptionInputAdvanced type visible in main.mo does not include a deliveryDays field.",
+      "evidence": [
+        "backend/migration.mo",
+        "backend/main.mo",
+        "frontend/src/components/SubscriptionForm.tsx"
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "requirement": "Generate a migration.mo that migrates legacy boolean delivered fields to the tri-state status variant (#delivered, #missed, #pending)",
+      "reason": "The migration.mo file migrates inventoryAdjustments from List to Array but does not contain any logic to convert legacy boolean delivered fields on subscription day records to the tri-state status variant. The DayRecord type already uses the tri-state status but no legacy boolean conversion logic is present.",
+      "evidence": [
+        "backend/migration.mo"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "InventoryAdjustmentHistory placeholder component informing users the feature is unavailable",
+      "reason": "The build request does not mention adding a placeholder InventoryAdjustmentHistory component or removing inventory adjustment history functionality. This component was not requested.",
+      "evidence": [
+        "frontend/src/components/InventoryAdjustmentHistory.tsx"
+      ]
+    },
+    {
+      "description": "NotificationPanel with low-stock ingredient alerts and expiring subscription alerts",
+      "reason": "The build request does not mention a notification panel, low-stock alerts, or expiring subscription notifications. These features were not requested.",
+      "evidence": [
+        "frontend/src/components/NotificationPanel.tsx"
+      ]
+    },
+    {
+      "description": "Migration of inventoryAdjustments from List to Array in migration.mo instead of the requested subscription day record boolean field migration",
+      "reason": "REQ-11 specifically requests migration of subscription day record legacy boolean delivered fields. The migration.mo instead focuses on converting inventoryAdjustments storage format, which was not requested.",
+      "evidence": [
+        "backend/migration.mo"
+      ]
+    }
+  ],
+  "confidence": 0.65,
+  "changed_files": [
+    "backend/main.mo",
+    "backend/migration.mo",
+    "frontend-file-summaries.txt",
+    "frontend/src/App.tsx",
+    "frontend/src/components/CustomerDetailsDialog.tsx",
+    "frontend/src/components/CustomerForm.tsx",
+    "frontend/src/components/CustomerList.tsx",
+    "frontend/src/components/DeliveryDayList.tsx",
+    "frontend/src/components/IngredientForm.tsx",
+    "frontend/src/components/IngredientList.tsx",
+    "frontend/src/components/InventoryAdjustmentHistory.tsx",
+    "frontend/src/components/InvoiceDetailsDialog.tsx",
+    "frontend/src/components/InvoiceForm.tsx",
+    "frontend/src/components/InvoiceList.tsx",
+    "frontend/src/components/Layout.tsx",
+    "frontend/src/components/NotificationPanel.tsx",
+    "frontend/src/components/PlanForm.tsx",
+    "frontend/src/components/PlanList.tsx",
+    "frontend/src/components/RecipeForm.tsx",
+    "frontend/src/components/RecipeList.tsx",
+    "frontend/src/components/SubscriptionForm.tsx",
+    "frontend/src/components/SubscriptionList.tsx",
+    "frontend/src/contexts/AuthContext.tsx",
+    "frontend/src/hooks/useNotifications.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/hooks/useSalesAnalytics.ts",
+    "frontend/src/pages/CustomersPage.tsx",
+    "frontend/src/pages/DashboardPage.tsx",
+    "frontend/src/pages/InventoryPage.tsx",
+    "frontend/src/pages/LoginPage.tsx",
+    "frontend/src/pages/MenuPage.tsx",
+    "frontend/src/pages/PlansPage.tsx",
+    "frontend/src/pages/SalesPage.tsx",
+    "frontend/src/pages/SubscriptionsPage.tsx",
+    "frontend/src/types.ts",
+    "project_state.json"
+  ]
+}
